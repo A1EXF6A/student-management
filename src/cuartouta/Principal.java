@@ -39,6 +39,8 @@ public class Principal extends javax.swing.JFrame {
         jMenuBar1 = new javax.swing.JMenuBar();
         jmnuStudents = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuItem3 = new javax.swing.JMenuItem();
+        jMenuItem4 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenu3 = new javax.swing.JMenu();
         jMenuItem2 = new javax.swing.JMenuItem();
@@ -65,6 +67,22 @@ public class Principal extends javax.swing.JFrame {
             }
         });
         jmnuStudents.add(jMenuItem1);
+
+        jMenuItem3.setText("Cursos");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
+        jmnuStudents.add(jMenuItem3);
+
+        jMenuItem4.setText("Estudiantes");
+        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem4ActionPerformed(evt);
+            }
+        });
+        jmnuStudents.add(jMenuItem4);
 
         jMenuBar1.add(jmnuStudents);
 
@@ -118,6 +136,26 @@ public class Principal extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
+    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
+        if(isAdmin()){
+            Inscripcion b = new Inscripcion();
+            jdskPrincipal.add(b);
+            b.setVisible(true);
+        }else{
+            JOptionPane.showMessageDialog(this, "No tiene permisos");
+        }
+    }//GEN-LAST:event_jMenuItem4ActionPerformed
+
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+        if(isAdmin()){
+            Cursos c = new Cursos();
+            jdskPrincipal.add(c);
+            c.setVisible(true);
+        }else{
+            JOptionPane.showMessageDialog(this, "No tiene permisos");
+        }
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -129,6 +167,8 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JDesktopPane jdskPrincipal;
     private javax.swing.JMenu jmnuStudents;
     // End of variables declaration//GEN-END:variables
