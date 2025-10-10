@@ -11,6 +11,9 @@
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItem1">
               <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/icons/students.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Estudiantes"/>
               </Properties>
               <Events>
@@ -19,6 +22,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItem3">
               <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/icons/course.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Cursos"/>
               </Properties>
               <Events>
@@ -27,7 +33,10 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItem4">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Estudiantes"/>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/icons/registration.png"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Inscripciones"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItem4ActionPerformed"/>
@@ -42,6 +51,9 @@
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="jmniEstudiantes">
               <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/icons/guys.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Estudiantes"/>
               </Properties>
               <Events>
@@ -50,6 +62,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jmniCursos">
               <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/icons/courses.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Cursos"/>
               </Properties>
               <Events>
@@ -58,6 +73,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jmniInscripciones">
               <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/icons/list.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Inscripciones"/>
               </Properties>
               <Events>
@@ -73,6 +91,9 @@
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItem2">
               <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/icons/exit.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Salir"/>
               </Properties>
               <Events>
@@ -127,7 +148,7 @@
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="277" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="284" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
       </Layout>
