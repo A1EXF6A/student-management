@@ -4,6 +4,8 @@
  */
 package cuartouta;
 
+import java.sql.*;
+
 /**
  *
  * @author DELL
@@ -15,6 +17,146 @@ public class Inscripcion extends javax.swing.JInternalFrame  {
      */
     public Inscripcion() {
         initComponents();
+        initLogic();
+    }
+
+    // lógica similar a Estudiantes
+    private Conexion con = new Conexion();
+    private javax.swing.table.DefaultTableModel table;
+
+    private void initLogic() {
+        table = new javax.swing.table.DefaultTableModel();
+        this.jtblDatosCursos.setModel(table);
+        table.addColumn("CURSO");
+        table.addColumn("CEDULA");
+        table.addColumn("ESTUDIANTE");
+
+        loadEstudiantes();
+        loadCursos();
+        loadInscripciones("");
+    }
+
+    private void loadEstudiantes() {
+        try {
+            jcbxEstudiantes.removeAllItems();
+            Connection cc = con.conectar();
+            String sql = "SELECT est_cedula, est_nombre FROM estudiante";
+            java.sql.Statement st = cc.createStatement();
+            java.sql.ResultSet rs = st.executeQuery(sql);
+            while (rs.next()) {
+                String ced = rs.getString("est_cedula");
+                String nom = rs.getString("est_nombre");
+                jcbxEstudiantes.addItem(ced + " - " + nom);
+            }
+        } catch (Exception ex) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Error cargando estudiantes: " + ex.getMessage());
+        }
+    }
+
+    private void loadCursos() {
+        try {
+            jcbxCursos.removeAllItems();
+            Connection cc = con.conectar();
+            String sql = "SELECT cursoid, nombre FROM cursos";
+            java.sql.Statement st = cc.createStatement();
+            java.sql.ResultSet rs = st.executeQuery(sql);
+            while (rs.next()) {
+                String id = rs.getString("cursoid");
+                String nom = rs.getString("nombre");
+                jcbxCursos.addItem(id + " - " + nom);
+            }
+        } catch (Exception ex) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Error cargando cursos: " + ex.getMessage());
+        }
+    }
+
+    private void loadInscripciones(String cedFilter) {
+        try {
+            table.setRowCount(0);
+            Connection cc = con.conectar();
+            String sql = "SELECT c.nombre AS curso, e.est_cedula AS cedula, e.est_nombre AS nombre "
+                    + "FROM estudiante_curso ec "
+                    + "JOIN estudiante e ON ec.est_cedula = e.est_cedula "
+                    + "JOIN cursos c ON ec.cursoid = c.cursoid";
+            java.sql.PreparedStatement ps;
+            if (cedFilter != null && !cedFilter.isEmpty()) {
+                sql += " WHERE e.est_cedula LIKE ?";
+                ps = cc.prepareStatement(sql);
+                ps.setString(1, "%" + cedFilter + "%");
+            } else {
+                ps = cc.prepareStatement(sql);
+            }
+            java.sql.ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                String[] row = new String[3];
+                row[0] = rs.getString("curso");
+                row[1] = rs.getString("cedula");
+                row[2] = rs.getString("nombre");
+                table.addRow(row);
+            }
+        } catch (Exception ex) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Error cargando inscripciones: " + ex.getMessage());
+        }
+    }
+
+    private void saveInscripcion() {
+        try {
+            if (jcbxEstudiantes.getItemCount() == 0 || jcbxCursos.getItemCount() == 0) {
+                javax.swing.JOptionPane.showMessageDialog(this, "No hay estudiantes o cursos para inscribir");
+                return;
+            }
+            String estItem = (String) jcbxEstudiantes.getSelectedItem();
+            String cursoItem = (String) jcbxCursos.getSelectedItem();
+            String ced = estItem.split(" - ")[0];
+            int cursoid = Integer.parseInt(cursoItem.split(" - ")[0]);
+            Connection cc = con.conectar();
+            String sql = "INSERT INTO estudiante_curso (est_cedula, cursoid) VALUES (?, ?)";
+            java.sql.PreparedStatement ps = cc.prepareStatement(sql);
+            ps.setString(1, ced);
+            ps.setInt(2, cursoid);
+            int n = ps.executeUpdate();
+            if (n > 0) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Inscripción realizada");
+                loadInscripciones("");
+            }
+        } catch (java.sql.SQLIntegrityConstraintViolationException ex) {
+            javax.swing.JOptionPane.showMessageDialog(this, "La inscripción ya existe o hay un error: " + ex.getMessage());
+        } catch (Exception ex) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Error al inscribir: " + ex.getMessage());
+        }
+    }
+
+    private void deleteInscripcion() {
+        try {
+            int row = jtblDatosCursos.getSelectedRow();
+            if (row == -1) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una inscripción para eliminar");
+                return;
+            }
+            String ced = jtblDatosCursos.getValueAt(row, 1).toString();
+            String curso = jtblDatosCursos.getValueAt(row, 0).toString();
+            if (javax.swing.JOptionPane.showConfirmDialog(null, "ESTAS SEGURO DE ELIMINAR", "ELIMINAR INSCRIPCION", javax.swing.JOptionPane.YES_NO_OPTION)
+                    == javax.swing.JOptionPane.YES_NO_OPTION) {
+                Connection cc = con.conectar();
+                String sql = "DELETE ec FROM estudiante_curso ec "
+                        + "JOIN cursos c ON ec.cursoid = c.cursoid "
+                        + "WHERE ec.est_cedula = ? AND c.nombre = ?";
+                java.sql.PreparedStatement ps = cc.prepareStatement(sql);
+                ps.setString(1, ced);
+                ps.setString(2, curso);
+                int n = ps.executeUpdate();
+                if (n > 0) {
+                    javax.swing.JOptionPane.showMessageDialog(this, "Inscripción eliminada");
+                    loadInscripciones("");
+                }
+            }
+        } catch (Exception ex) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Error al eliminar: " + ex.getMessage());
+        }
+    }
+
+    private void searchByCedula(String ced) {
+        loadInscripciones(ced);
     }
 
     /**
@@ -38,7 +180,6 @@ public class Inscripcion extends javax.swing.JInternalFrame  {
         jtxtBuscarEstudiante = new javax.swing.JTextField();
         jbtnBuscar = new javax.swing.JButton();
         jbtnInscribir = new javax.swing.JButton();
-        jbtnEditar = new javax.swing.JButton();
         jbtnEliminar = new javax.swing.JButton();
         jbtnNuevo = new javax.swing.JButton();
         jbtnCancelar = new javax.swing.JButton();
@@ -83,13 +224,6 @@ public class Inscripcion extends javax.swing.JInternalFrame  {
             }
         });
 
-        jbtnEditar.setText("Editar");
-        jbtnEditar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jbtnEditarActionPerformed(evt);
-            }
-        });
-
         jbtnEliminar.setText("Eliminar");
         jbtnEliminar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -120,36 +254,37 @@ public class Inscripcion extends javax.swing.JInternalFrame  {
                 .addComponent(jScrollPane1)
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(16, 16, 16)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 108, Short.MAX_VALUE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, 96, Short.MAX_VALUE)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(16, 16, 16)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 108, Short.MAX_VALUE)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jcbxEstudiantes, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jcbxCursos, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, 96, Short.MAX_VALUE)
+                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jcbxEstudiantes, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jcbxCursos, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel4)
+                        .addGap(33, 33, 33)
+                        .addComponent(jtxtBuscarEstudiante, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jbtnInscribir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jbtnNuevo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jbtnEliminar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jbtnEditar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jbtnCancelar, javax.swing.GroupLayout.DEFAULT_SIZE, 81, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jbtnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(jbtnInscribir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jbtnNuevo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jbtnEliminar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jbtnCancelar, javax.swing.GroupLayout.DEFAULT_SIZE, 81, Short.MAX_VALUE)))
                 .addGap(51, 51, 51))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jtxtBuscarEstudiante, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jbtnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -169,17 +304,15 @@ public class Inscripcion extends javax.swing.JInternalFrame  {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jbtnEliminar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jbtnEditar)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jbtnCancelar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(jtxtBuscarEstudiante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jbtnBuscar))
-                .addGap(18, 18, 18)
+                .addGap(23, 23, 23)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(69, 69, 69))
+                .addGap(51, 51, 51))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -197,31 +330,32 @@ public class Inscripcion extends javax.swing.JInternalFrame  {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jtxtBuscarEstudianteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtxtBuscarEstudianteActionPerformed
-        // TODO add your handling code here:
+        searchByCedula(jtxtBuscarEstudiante.getText().trim());
     }//GEN-LAST:event_jtxtBuscarEstudianteActionPerformed
 
     private void jbtnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnCancelarActionPerformed
-        // TODO add your handling code here:
+        // limpiar y recargar
+        loadEstudiantes();
+        loadCursos();
+        loadInscripciones("");
     }//GEN-LAST:event_jbtnCancelarActionPerformed
 
     private void jbtnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnNuevoActionPerformed
-        // TODO add your handling code here:
+        // preparar para nueva inscripción
+        jcbxEstudiantes.setSelectedIndex(0);
+        jcbxCursos.setSelectedIndex(0);
     }//GEN-LAST:event_jbtnNuevoActionPerformed
 
     private void jbtnInscribirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnInscribirActionPerformed
-        // TODO add your handling code here:
+        saveInscripcion();
     }//GEN-LAST:event_jbtnInscribirActionPerformed
 
     private void jbtnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnEliminarActionPerformed
-        // TODO add your handling code here:
+        deleteInscripcion();
     }//GEN-LAST:event_jbtnEliminarActionPerformed
 
-    private void jbtnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnEditarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jbtnEditarActionPerformed
-
     private void jbtnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnBuscarActionPerformed
-        // TODO add your handling code here:
+        searchByCedula(jtxtBuscarEstudiante.getText().trim());
     }//GEN-LAST:event_jbtnBuscarActionPerformed
 
  
@@ -235,7 +369,6 @@ public class Inscripcion extends javax.swing.JInternalFrame  {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton jbtnBuscar;
     private javax.swing.JButton jbtnCancelar;
-    private javax.swing.JButton jbtnEditar;
     private javax.swing.JButton jbtnEliminar;
     private javax.swing.JButton jbtnInscribir;
     private javax.swing.JButton jbtnNuevo;
