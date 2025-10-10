@@ -28,6 +28,8 @@ public class Estudiantes extends javax.swing.JInternalFrame {
 
     public Estudiantes() {
         initComponents();
+        // permitir cerrar la ventana interna con el botón X
+        this.setClosable(true);
         String titles[] = {"CEDULA", "NOMBRE"};
         table = new DefaultTableModel();
         this.jtblDatos.setModel(table);

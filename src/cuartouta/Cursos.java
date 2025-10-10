@@ -17,6 +17,8 @@ public class Cursos extends javax.swing.JInternalFrame  {
      */
     public Cursos() {
         initComponents();
+        // permitir cerrar la ventana interna con el botón X
+        this.setClosable(true);
         initLogic();
     }
     
