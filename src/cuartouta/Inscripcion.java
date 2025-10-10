@@ -34,11 +34,11 @@ public class Inscripcion extends javax.swing.JInternalFrame  {
         loadEstudiantes();
         loadCursos();
         loadInscripciones("");
-        // búsqueda dinámica en el campo jtxtBuscarEstudiante -> llamará al método de filtro
+        // búsqueda dinámica en el campo jtxtBuscarEstudiante
         jtxtBuscarEstudiante.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
-            public void insertUpdate(javax.swing.event.DocumentEvent e) { filterInscripciones(jtxtBuscarEstudiante.getText().trim()); }
-            public void removeUpdate(javax.swing.event.DocumentEvent e) { filterInscripciones(jtxtBuscarEstudiante.getText().trim()); }
-            public void changedUpdate(javax.swing.event.DocumentEvent e) { filterInscripciones(jtxtBuscarEstudiante.getText().trim()); }
+            public void insertUpdate(javax.swing.event.DocumentEvent e) { loadInscripciones(jtxtBuscarEstudiante.getText().trim()); }
+            public void removeUpdate(javax.swing.event.DocumentEvent e) { loadInscripciones(jtxtBuscarEstudiante.getText().trim()); }
+            public void changedUpdate(javax.swing.event.DocumentEvent e) { loadInscripciones(jtxtBuscarEstudiante.getText().trim()); }
         });
     }
 
@@ -46,13 +46,14 @@ public class Inscripcion extends javax.swing.JInternalFrame  {
         try {
             jcbxEstudiantes.removeAllItems();
             Connection cc = con.conectar();
-            String sql = "SELECT est_cedula, est_nombre FROM estudiante";
+            String sql = "SELECT est_cedula, est_nombre, est_apellido FROM estudiante";
             java.sql.Statement st = cc.createStatement();
             java.sql.ResultSet rs = st.executeQuery(sql);
             while (rs.next()) {
                 String ced = rs.getString("est_cedula");
                 String nom = rs.getString("est_nombre");
-                jcbxEstudiantes.addItem(ced + " - " + nom);
+                String ape = rs.getString("est_apellido");
+                jcbxEstudiantes.addItem(ced + "-" + nom+"-"+ape);
             }
         } catch (Exception ex) {
             javax.swing.JOptionPane.showMessageDialog(this, "Error cargando estudiantes: " + ex.getMessage());
@@ -67,9 +68,9 @@ public class Inscripcion extends javax.swing.JInternalFrame  {
             java.sql.Statement st = cc.createStatement();
             java.sql.ResultSet rs = st.executeQuery(sql);
             while (rs.next()) {
-                String id = rs.getString("cursoid");
+                // Sólo añadimos el nombre al combobox (no el id)
                 String nom = rs.getString("nombre");
-                jcbxCursos.addItem(id + " - " + nom);
+                jcbxCursos.addItem(nom);
             }
         } catch (Exception ex) {
             javax.swing.JOptionPane.showMessageDialog(this, "Error cargando cursos: " + ex.getMessage());
@@ -112,10 +113,63 @@ public class Inscripcion extends javax.swing.JInternalFrame  {
                 return;
             }
             String estItem = (String) jcbxEstudiantes.getSelectedItem();
-            String cursoItem = (String) jcbxCursos.getSelectedItem();
-            String ced = estItem.split(" - ")[0];
-            int cursoid = Integer.parseInt(cursoItem.split(" - ")[0]);
+            String cursoNombre = (String) jcbxCursos.getSelectedItem();
+            if (estItem == null || estItem.trim().isEmpty()) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Seleccione un estudiante válido");
+                return;
+            }
+            // estItem was populated as "cedula-nombre-apellido" (no spaces).
+            // Extract cedula robustly: take substring before the first '-' if present.
+            String ced;
+            int dashPos = estItem.indexOf('-');
+            if (dashPos > 0) {
+                ced = estItem.substring(0, dashPos).trim();
+            } else {
+                ced = estItem.trim();
+            }
+            // Basic validation: cedula length should be reasonable (avoid inserting huge strings)
+            if (ced.length() == 0 || ced.length() > 50) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Cédula de estudiante inválida: '" + ced + "'");
+                return;
+            }
             Connection cc = con.conectar();
+            // Buscar cursoid por nombre (usamos PreparedStatement por si el nombre tiene caracteres especiales)
+            String q = "SELECT cursoid FROM cursos WHERE nombre = ? LIMIT 1";
+            java.sql.PreparedStatement qst = cc.prepareStatement(q);
+            qst.setString(1, cursoNombre);
+            java.sql.ResultSet qrs = qst.executeQuery();
+            if (!qrs.next()) {
+                javax.swing.JOptionPane.showMessageDialog(this, "No se encontró el curso seleccionado.");
+                return;
+            }
+            int cursoid = qrs.getInt("cursoid");
+            // Verify that the estudiante exists (to avoid FK error)
+            String checkEst = "SELECT est_cedula FROM estudiante WHERE est_cedula = ?";
+            java.sql.PreparedStatement psCheck = cc.prepareStatement(checkEst);
+            psCheck.setString(1, ced);
+            java.sql.ResultSet rsCheck = psCheck.executeQuery();
+            if (!rsCheck.next()) {
+                javax.swing.JOptionPane.showMessageDialog(this, "El estudiante seleccionado no existe en la base de datos: " + ced);
+                return;
+            }
+
+            // Get column max size for est_cedula to avoid data truncation errors
+            int maxSize = -1;
+            try {
+                java.sql.DatabaseMetaData md = cc.getMetaData();
+                java.sql.ResultSet cols = md.getColumns(null, null, "estudiante", "est_cedula");
+                if (cols.next()) {
+                    maxSize = cols.getInt("COLUMN_SIZE");
+                }
+                if (cols != null) cols.close();
+            } catch (Exception mm) {
+                // ignore metadata failures, we'll rely on basic validation
+            }
+            if (maxSize > 0 && ced.length() > maxSize) {
+                javax.swing.JOptionPane.showMessageDialog(this, "La cédula es demasiado larga (" + ced.length() + " > " + maxSize + ")");
+                return;
+            }
+
             String sql = "INSERT INTO estudiante_curso (est_cedula, cursoid) VALUES (?, ?)";
             java.sql.PreparedStatement ps = cc.prepareStatement(sql);
             ps.setString(1, ced);
@@ -162,16 +216,6 @@ public class Inscripcion extends javax.swing.JInternalFrame  {
     }
 
     private void searchByCedula(String ced) {
-        loadInscripciones(ced);
-    }
-
-    // carga todas las inscripciones
-    public void loadAllInscripciones() {
-        loadInscripciones("");
-    }
-
-    // filtra inscripciones por cédula
-    public void filterInscripciones(String ced) {
         loadInscripciones(ced);
     }
 
@@ -322,11 +366,10 @@ public class Inscripcion extends javax.swing.JInternalFrame  {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jbtnCancelar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jbtnBuscar)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel4)
-                        .addComponent(jtxtBuscarEstudiante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(jtxtBuscarEstudiante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jbtnBuscar))
                 .addGap(23, 23, 23)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(51, 51, 51))

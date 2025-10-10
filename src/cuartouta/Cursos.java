@@ -33,20 +33,10 @@ public class Cursos extends javax.swing.JInternalFrame  {
         cargardatos();
         // búsqueda dinámica en jtxtNombreCurso
         jtxtNombreCurso.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
-            public void insertUpdate(javax.swing.event.DocumentEvent e) { filterCourses(jtxtNombreCurso.getText().trim()); }
-            public void removeUpdate(javax.swing.event.DocumentEvent e) { filterCourses(jtxtNombreCurso.getText().trim()); }
-            public void changedUpdate(javax.swing.event.DocumentEvent e) { filterCourses(jtxtNombreCurso.getText().trim()); }
+            public void insertUpdate(javax.swing.event.DocumentEvent e) { getData(jtxtNombreCurso.getText().trim()); }
+            public void removeUpdate(javax.swing.event.DocumentEvent e) { getData(jtxtNombreCurso.getText().trim()); }
+            public void changedUpdate(javax.swing.event.DocumentEvent e) { getData(jtxtNombreCurso.getText().trim()); }
         });
-    }
-
-    // carga todos los cursos
-    public void loadAllCourses() {
-        getData("");
-    }
-
-    // filtra cursos por nombre
-    public void filterCourses(String filter) {
-        getData(filter);
     }
 
     public void saveCourse() {

@@ -43,20 +43,10 @@ public class Estudiantes extends javax.swing.JInternalFrame {
         textoInicio();
         // búsqueda dinámica en el campo de búsqueda
         jtxtBuscarEstudiante.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
-            public void insertUpdate(javax.swing.event.DocumentEvent e) { filterData(jtxtBuscarEstudiante.getText().trim()); }
-            public void removeUpdate(javax.swing.event.DocumentEvent e) { filterData(jtxtBuscarEstudiante.getText().trim()); }
-            public void changedUpdate(javax.swing.event.DocumentEvent e) { filterData(jtxtBuscarEstudiante.getText().trim()); }
+            public void insertUpdate(javax.swing.event.DocumentEvent e) { getData(jtxtBuscarEstudiante.getText().trim()); }
+            public void removeUpdate(javax.swing.event.DocumentEvent e) { getData(jtxtBuscarEstudiante.getText().trim()); }
+            public void changedUpdate(javax.swing.event.DocumentEvent e) { getData(jtxtBuscarEstudiante.getText().trim()); }
         });
-    }
-
-    // carga todos los estudiantes (sin filtro)
-    public void loadAllData() {
-        getData("");
-    }
-
-    // filtra estudiantes por cédula (o parte de ella)
-    public void filterData(String filter) {
-        getData(filter);
     }
 
     public void save() {
