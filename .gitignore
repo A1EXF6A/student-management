@@ -1,1 +1,59 @@
-/dist/
+# Build artifacts
+/build/
+/build/**
+
+# Compiled classes
+*.class
+
+# NetBeans project files (local/private)
+nbproject/private/
+
+# IDE metadata
+/.idea/
+*.iml
+
+# Mac / OS files
+.DS_Store
+
+# Windows thumbnail cache
+Thumbs.db
+
+# Logs
+*.log
+
+# Generated PDFs and report outputs (ignore generated reports)
+/reporte_*.pdf
+/reportes/*.pdf
+/reports/*.pdf
+/*.pdf
+
+# Libraries (ignore lib/ by default to avoid committing binary jars)
+/lib/
+
+# Temporary files
+*.tmp
+*.temp
+~$*
+
+# Maven / Gradle (if ever added)
+/target/
+.gradle/
+
+# Python envs (if any)
+venv/
+.env
+
+# Exclude generated build classes directory
+/build/classes/
+
+# Exclude IDE workspace specific files
+*.swp
+*.swo
+
+# Keep README and source files tracked
+!README.md
+!src/**
+
+# If you intentionally want to commit jars into lib/, remove the following line
+# (we ignore lib/ by default to encourage storing jars outside VCS)
+

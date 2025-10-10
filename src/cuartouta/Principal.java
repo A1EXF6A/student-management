@@ -4,6 +4,8 @@
  */
 package cuartouta;
 
+import reportes.ReporteEstudiantes;
+import reportes.VisorPDF;
 import javax.swing.JOptionPane;
 
 /**
@@ -12,6 +14,8 @@ import javax.swing.JOptionPane;
  */
 public class Principal extends javax.swing.JFrame {
     private String rol;
+    // instancia actual para acceder al JDesktopPane desde clases estáticas (VisorPDF)
+    private static Principal currentInstance;
     /**
      * Creates new form Principal
      */
@@ -19,7 +23,12 @@ public class Principal extends javax.swing.JFrame {
         initComponents();
         this.setExtendedState(this.MAXIMIZED_BOTH);
         this.rol = rol;
+        currentInstance = this;
  
+    }
+
+    public static javax.swing.JDesktopPane getDesktopPane() {
+        return currentInstance == null ? null : currentInstance.jdskPrincipal;
     }
     
     private boolean isAdmin() {
@@ -44,6 +53,8 @@ public class Principal extends javax.swing.JFrame {
         jMenuItem4 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jmniEstudiantes = new javax.swing.JMenuItem();
+        jmniCursos = new javax.swing.JMenuItem();
+        jmniInscripciones = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
         jMenuItem2 = new javax.swing.JMenuItem();
 
@@ -97,6 +108,22 @@ public class Principal extends javax.swing.JFrame {
             }
         });
         jMenu2.add(jmniEstudiantes);
+
+        jmniCursos.setText("Cursos");
+        jmniCursos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmniCursosActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jmniCursos);
+
+        jmniInscripciones.setText("Inscripciones");
+        jmniInscripciones.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmniInscripcionesActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jmniInscripciones);
 
         jMenuBar1.add(jMenu2);
 
@@ -168,8 +195,34 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     private void jmniEstudiantesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmniEstudiantesActionPerformed
-        JOptionPane.showMessageDialog(this, "");
+        try {
+        String ruta = ReporteEstudiantes.generarPDF();
+        VisorPDF.mostrarPDF(ruta);
+    } catch (Exception ex) {
+        JOptionPane.showMessageDialog(this, "Error al generar el reporte: " + ex.getMessage());
+        ex.printStackTrace();
+    }
     }//GEN-LAST:event_jmniEstudiantesActionPerformed
+
+    private void jmniCursosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmniCursosActionPerformed
+        try {
+            String ruta = reportes.ReporteCursos.generarPDF();
+            VisorPDF.mostrarPDF(ruta);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Error al generar el reporte de cursos: " + ex.getMessage());
+            ex.printStackTrace();
+        }
+    }//GEN-LAST:event_jmniCursosActionPerformed
+
+    private void jmniInscripcionesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmniInscripcionesActionPerformed
+        try {
+            String ruta = reportes.ReporteInscripciones.generarPDF();
+            VisorPDF.mostrarPDF(ruta);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Error al generar el reporte de inscripciones: " + ex.getMessage());
+            ex.printStackTrace();
+        }
+    }//GEN-LAST:event_jmniInscripcionesActionPerformed
 
     /**
      * @param args the command line arguments
@@ -185,7 +238,9 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JDesktopPane jdskPrincipal;
+    private javax.swing.JMenuItem jmniCursos;
     private javax.swing.JMenuItem jmniEstudiantes;
+    private javax.swing.JMenuItem jmniInscripciones;
     private javax.swing.JMenu jmnuStudents;
     // End of variables declaration//GEN-END:variables
 }
