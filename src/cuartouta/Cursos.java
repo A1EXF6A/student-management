@@ -31,7 +31,7 @@ public class Cursos extends javax.swing.JInternalFrame  {
         jtxtNombreCurso = new javax.swing.JTextField();
         jbtnBuscar = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jtblCursos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -48,10 +48,20 @@ public class Cursos extends javax.swing.JInternalFrame  {
         jLabel2.setText("Nombre");
 
         jbtnGuardar.setText("Guardar");
+        jbtnGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbtnGuardarActionPerformed(evt);
+            }
+        });
 
         jLabel3.setText("Buscar Curso");
 
         jbtnBuscar.setText("Buscar");
+        jbtnBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbtnBuscarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -118,6 +128,14 @@ public class Cursos extends javax.swing.JInternalFrame  {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jbtnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnGuardarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jbtnGuardarActionPerformed
+
+    private void jbtnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnBuscarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jbtnBuscarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
