@@ -36,7 +36,8 @@ public class VisorPDF {
             // Agregamos el visor al JDesktopPane de Principal si está disponible
             javax.swing.JDesktopPane desktop = Principal.getDesktopPane();
             if (desktop != null) {
-                desktop.add(visor);
+                // Use Principal helper to avoid overlap
+                Principal.openInternalFrame(visor);
                 try { visor.setSelected(true); } catch (Exception ex) {}
             } else {
                 // Si no hay desktop (ejecución fuera del frame), abrir en JFrame

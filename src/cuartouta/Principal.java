@@ -10,6 +10,7 @@ import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 import java.awt.event.KeyEvent;
 import java.awt.event.InputEvent;
+import java.awt.Rectangle;
 
 
 /**
@@ -72,6 +73,76 @@ public class Principal extends javax.swing.JFrame {
 
     public static javax.swing.JDesktopPane getDesktopPane() {
         return currentInstance == null ? null : currentInstance.jdskPrincipal;
+    }
+
+    /**
+     * Add a JInternalFrame to the desktop and position it so it does not
+     * overlap any existing internal frames. It will try a grid of positions
+     * and fall back to a simple cascade if none free is found.
+     */
+    private void addInternalFrameNoOverlap(javax.swing.JInternalFrame frame) {
+        javax.swing.JDesktopPane desktop = this.jdskPrincipal;
+
+        // Ensure the frame has a sensible size before positioning
+        if (frame.getWidth() <= 0 || frame.getHeight() <= 0) {
+            frame.pack();
+        }
+
+        int step = 30;
+        int startX = 10;
+        int startY = 10;
+
+        int desktopW = Math.max(1, desktop.getWidth());
+        int desktopH = Math.max(1, desktop.getHeight());
+
+        int maxX = Math.max(startX, desktopW - frame.getWidth());
+        int maxY = Math.max(startY, desktopH - frame.getHeight());
+
+        boolean placed = false;
+        for (int y = startY; y <= maxY; y += step) {
+            for (int x = startX; x <= maxX; x += step) {
+                Rectangle candidate = new Rectangle(x, y, frame.getWidth(), frame.getHeight());
+                boolean intersects = false;
+                for (javax.swing.JInternalFrame f : desktop.getAllFrames()) {
+                    if (f == frame) continue;
+                    if (f.getBounds().intersects(candidate)) {
+                        intersects = true;
+                        break;
+                    }
+                }
+                if (!intersects) {
+                    frame.setLocation(x, y);
+                    placed = true;
+                    break;
+                }
+            }
+            if (placed) break;
+        }
+
+        if (!placed) {
+            // fallback: cascade based on number of existing frames
+            int offset = desktop.getAllFrames().length * step;
+            int x = (startX + offset) % Math.max(1, desktopW - frame.getWidth());
+            int y = (startY + offset) % Math.max(1, desktopH - frame.getHeight());
+            frame.setLocation(Math.max(startX, x), Math.max(startY, y));
+        }
+
+        desktop.add(frame);
+        frame.setVisible(true);
+    }
+
+    /**
+     * Static wrapper so other classes can add an internal frame without
+     * overlapping existing frames. Safe to call from static contexts.
+     */
+    public static void openInternalFrame(javax.swing.JInternalFrame frame) {
+        if (currentInstance != null) {
+            currentInstance.addInternalFrameNoOverlap(frame);
+        } else {
+            // No desktop available; fall back to default behavior: just show the frame
+            frame.setLocation(50, 50);
+            frame.setVisible(true);
+        }
     }
     
     private boolean isAdmin() {
@@ -201,8 +272,7 @@ public class Principal extends javax.swing.JFrame {
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         if(isAdmin()){
             Estudiantes a = new Estudiantes();
-            jdskPrincipal.add(a);
-            a.setVisible(true);
+            addInternalFrameNoOverlap(a);
         }else{
             JOptionPane.showMessageDialog(this, "No tiene permisos");
         }
@@ -220,8 +290,7 @@ public class Principal extends javax.swing.JFrame {
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
         if(isAdmin()){
             Inscripcion b = new Inscripcion();
-            jdskPrincipal.add(b);
-            b.setVisible(true);
+            addInternalFrameNoOverlap(b);
         }else{
             JOptionPane.showMessageDialog(this, "No tiene permisos");
         }
@@ -230,8 +299,7 @@ public class Principal extends javax.swing.JFrame {
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
         if(isAdmin()){
             Cursos c = new Cursos();
-            jdskPrincipal.add(c);
-            c.setVisible(true);
+            addInternalFrameNoOverlap(c);
         }else{
             JOptionPane.showMessageDialog(this, "No tiene permisos");
         }
