@@ -19,6 +19,7 @@ public class Principal extends javax.swing.JFrame {
         initComponents();
         this.setExtendedState(this.MAXIMIZED_BOTH);
         this.rol = rol;
+ 
     }
     
     private boolean isAdmin() {
@@ -42,6 +43,7 @@ public class Principal extends javax.swing.JFrame {
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenuItem4 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
+        jmniEstudiantes = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
         jMenuItem2 = new javax.swing.JMenuItem();
 
@@ -87,6 +89,15 @@ public class Principal extends javax.swing.JFrame {
         jMenuBar1.add(jmnuStudents);
 
         jMenu2.setText("Reportes");
+
+        jmniEstudiantes.setText("Estudiantes");
+        jmniEstudiantes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmniEstudiantesActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jmniEstudiantes);
+
         jMenuBar1.add(jMenu2);
 
         jMenu3.setText("Salir");
@@ -156,6 +167,10 @@ public class Principal extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
+    private void jmniEstudiantesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmniEstudiantesActionPerformed
+        JOptionPane.showMessageDialog(this, "");
+    }//GEN-LAST:event_jmniEstudiantesActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -170,6 +185,7 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JDesktopPane jdskPrincipal;
+    private javax.swing.JMenuItem jmniEstudiantes;
     private javax.swing.JMenu jmnuStudents;
     // End of variables declaration//GEN-END:variables
 }
