@@ -7,6 +7,10 @@ package cuartouta;
 import reportes.ReporteEstudiantes;
 import reportes.VisorPDF;
 import javax.swing.JOptionPane;
+import javax.swing.KeyStroke;
+import java.awt.event.KeyEvent;
+import java.awt.event.InputEvent;
+
 
 /**
  *
@@ -24,8 +28,47 @@ public class Principal extends javax.swing.JFrame {
         this.setExtendedState(this.MAXIMIZED_BOTH);
         this.rol = rol;
         currentInstance = this;
+        configurarAtajos();
  
     }
+    
+    private void configurarAtajos() {
+    // Ctrl + E → Reporte Estudiantes
+    jmniEstudiantes.setAccelerator(KeyStroke.getKeyStroke(
+        KeyEvent.VK_Q, InputEvent.CTRL_DOWN_MASK
+    ));
+
+    // Ctrl + C → Reporte Cursos
+    jmniCursos.setAccelerator(KeyStroke.getKeyStroke(
+        KeyEvent.VK_W, InputEvent.CTRL_DOWN_MASK
+    ));
+
+    // Ctrl + I → Reporte Inscripciones
+    jmniInscripciones.setAccelerator(KeyStroke.getKeyStroke(
+        KeyEvent.VK_E, InputEvent.CTRL_DOWN_MASK
+    ));
+
+    // Ctrl + 1 → Ventana Estudiantes
+    jMenuItem1.setAccelerator(KeyStroke.getKeyStroke(
+        KeyEvent.VK_A, InputEvent.CTRL_DOWN_MASK
+    ));
+
+    // Ctrl + 2 → Ventana Cursos
+    jMenuItem3.setAccelerator(KeyStroke.getKeyStroke(
+        KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK
+    ));
+    
+    // Ctrl + 2 → Ventana Inscripciones
+    jMenuItem4.setAccelerator(KeyStroke.getKeyStroke(
+        KeyEvent.VK_D, InputEvent.CTRL_DOWN_MASK
+    ));
+
+    // Ctrl + Q → Salir
+    jMenuItem2.setAccelerator(KeyStroke.getKeyStroke(
+        KeyEvent.VK_X, InputEvent.CTRL_DOWN_MASK
+    ));
+}
+
 
     public static javax.swing.JDesktopPane getDesktopPane() {
         return currentInstance == null ? null : currentInstance.jdskPrincipal;
