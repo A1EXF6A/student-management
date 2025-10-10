@@ -34,6 +34,12 @@ public class Inscripcion extends javax.swing.JInternalFrame  {
         loadEstudiantes();
         loadCursos();
         loadInscripciones("");
+        // búsqueda dinámica en el campo jtxtBuscarEstudiante -> llamará al método de filtro
+        jtxtBuscarEstudiante.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            public void insertUpdate(javax.swing.event.DocumentEvent e) { filterInscripciones(jtxtBuscarEstudiante.getText().trim()); }
+            public void removeUpdate(javax.swing.event.DocumentEvent e) { filterInscripciones(jtxtBuscarEstudiante.getText().trim()); }
+            public void changedUpdate(javax.swing.event.DocumentEvent e) { filterInscripciones(jtxtBuscarEstudiante.getText().trim()); }
+        });
     }
 
     private void loadEstudiantes() {
@@ -156,6 +162,16 @@ public class Inscripcion extends javax.swing.JInternalFrame  {
     }
 
     private void searchByCedula(String ced) {
+        loadInscripciones(ced);
+    }
+
+    // carga todas las inscripciones
+    public void loadAllInscripciones() {
+        loadInscripciones("");
+    }
+
+    // filtra inscripciones por cédula
+    public void filterInscripciones(String ced) {
         loadInscripciones(ced);
     }
 
@@ -306,10 +322,11 @@ public class Inscripcion extends javax.swing.JInternalFrame  {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jbtnCancelar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(jtxtBuscarEstudiante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jbtnBuscar))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jbtnBuscar)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel4)
+                        .addComponent(jtxtBuscarEstudiante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(23, 23, 23)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(51, 51, 51))

@@ -36,11 +36,27 @@ public class Estudiantes extends javax.swing.JInternalFrame {
         table.addColumn("APELLIDO");
         table.addColumn("DIRECCION");
         table.addColumn("TELEFONO");
-        getData();
+        getData("");
         //this.setLocationRelativeTo(null);
         cargardatos();
         botones();
         textoInicio();
+        // búsqueda dinámica en el campo de búsqueda
+        jtxtBuscarEstudiante.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            public void insertUpdate(javax.swing.event.DocumentEvent e) { filterData(jtxtBuscarEstudiante.getText().trim()); }
+            public void removeUpdate(javax.swing.event.DocumentEvent e) { filterData(jtxtBuscarEstudiante.getText().trim()); }
+            public void changedUpdate(javax.swing.event.DocumentEvent e) { filterData(jtxtBuscarEstudiante.getText().trim()); }
+        });
+    }
+
+    // carga todos los estudiantes (sin filtro)
+    public void loadAllData() {
+        getData("");
+    }
+
+    // filtra estudiantes por cédula (o parte de ella)
+    public void filterData(String filter) {
+        getData(filter);
     }
 
     public void save() {
@@ -69,7 +85,7 @@ public class Estudiantes extends javax.swing.JInternalFrame {
                 int n = psd.executeUpdate();
                 if (n > 0) {
                     JOptionPane.showMessageDialog(this, "Estudiante registrado correctamente.");
-                    getData();
+                        getData("");
                     botones();
                     textoInicio();
                 }
@@ -89,14 +105,21 @@ public class Estudiantes extends javax.swing.JInternalFrame {
         jtxtTelefono.setText("");
     }
 
-    public void getData() {
+    public void getData(String filter) {
         try {
             table.setRowCount(0);
             String data[] = new String[5];
             Connection cc = con.conectar();
             String sql = "select * from estudiante";
-            Statement psd = cc.createStatement();
-            ResultSet rs = psd.executeQuery(sql);
+            java.sql.PreparedStatement psd;
+            if (filter != null && !filter.isEmpty()) {
+                sql += " WHERE est_cedula LIKE ?";
+                psd = cc.prepareStatement(sql);
+                psd.setString(1, "%" + filter + "%");
+            } else {
+                psd = cc.prepareStatement(sql);
+            }
+            ResultSet rs = psd.executeQuery();
             while (rs.next()) {
 
                 data[0] = rs.getString("est_cedula");
@@ -123,7 +146,7 @@ public class Estudiantes extends javax.swing.JInternalFrame {
                 int n = psd.executeUpdate();
                 if (n > 0) {
                     JOptionPane.showMessageDialog(this, "SE ELIMINO CORRECTAMENTE");
-                    getData();
+                        getData("");
                 }
             }
         } catch (Exception ex) {
@@ -146,7 +169,7 @@ public class Estudiantes extends javax.swing.JInternalFrame {
 
             if (n > 0) {
                 JOptionPane.showMessageDialog(this, "SE ACTUALIZÓ CORRECTAMENTE");
-                getData();  // Refresca la tabla
+                    getData("");  // Refresca la tabla
                 clean();    // Limpia los campos
             }
         } catch (Exception ex) {
