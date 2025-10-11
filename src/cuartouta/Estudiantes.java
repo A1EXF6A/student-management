@@ -49,6 +49,62 @@ public class Estudiantes extends javax.swing.JInternalFrame {
             public void removeUpdate(javax.swing.event.DocumentEvent e) { getData(jtxtBuscarEstudiante.getText().trim()); }
             public void changedUpdate(javax.swing.event.DocumentEvent e) { getData(jtxtBuscarEstudiante.getText().trim()); }
         });
+          jtxtCedula.addKeyListener(new java.awt.event.KeyAdapter() {
+        @Override
+        public void keyTyped(java.awt.event.KeyEvent evt) {
+            char c = evt.getKeyChar();
+
+            // Si no es un dígito o ya hay 10 caracteres, no permite más entrada
+            if (!Character.isDigit(c) || jtxtCedula.getText().length() >= 10) {
+                evt.consume(); // Bloquea el carácter
+            }
+        }
+    });
+          jtxtTelefono.addKeyListener(new java.awt.event.KeyAdapter() {
+        @Override
+        public void keyTyped(java.awt.event.KeyEvent evt) {
+            char c = evt.getKeyChar();
+
+            // Si no es un dígito o ya hay 10 caracteres, no permite más entrada
+            if (!Character.isDigit(c) || jtxtTelefono.getText().length() >= 10) {
+                evt.consume(); // Bloquea el carácter
+            }
+        }
+    });
+             jtxtNombre.addKeyListener(new java.awt.event.KeyAdapter() {
+        @Override
+        public void keyTyped(java.awt.event.KeyEvent evt) {
+            char c = evt.getKeyChar();
+
+            // Solo permite letras, espacios y la tecla de retroceso
+            if ((!Character.isLetter(c) && c != ' ' && c != '\b') 
+                    || jtxtNombre.getText().length() >= 50) {
+                evt.consume(); // Bloquea si no cumple las condiciones
+            }
+        }
+    });
+               jtxtApellido.addKeyListener(new java.awt.event.KeyAdapter() {
+        @Override
+        public void keyTyped(java.awt.event.KeyEvent evt) {
+            char c = evt.getKeyChar();
+
+            // Solo permite letras, espacios y la tecla de retroceso
+            if ((!Character.isLetter(c) && c != ' ' && c != '\b') 
+                    || jtxtApellido.getText().length() >= 50) {
+                evt.consume(); // Bloquea si no cumple las condiciones
+            }
+        }
+    });
+             jtxtDireccion.addKeyListener(new java.awt.event.KeyAdapter() {
+    @Override
+    public void keyTyped(java.awt.event.KeyEvent evt) {
+        // Limita a 50 caracteres máximo
+        if (jtxtDireccion.getText().length() >= 50) {
+            evt.consume(); // No deja escribir más
+        }
+    }
+});
+
     }
 
     public void save() {
@@ -87,6 +143,20 @@ public class Estudiantes extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
         }
         // clean();
+    }
+    public void btnCancelar() {
+        jtxtCedula.setEnabled(false);
+        jtxtNombre.setEnabled(false);
+        jtxtApellido.setEnabled(false);
+        jtxtTelefono.setEnabled(false);
+        jtxtDireccion.setEnabled(false);
+
+        jbtnNuevo.setEnabled(true);
+        jbtnEditar.setEnabled(false);
+        JbtnEliminar.setEnabled(false);
+        jbtnGuardar.setEnabled(false);
+        jbtnCancelar.setEnabled(true);
+        clean();
     }
 
     public void clean() {
@@ -256,7 +326,6 @@ public class Estudiantes extends javax.swing.JInternalFrame {
         jtblDatos = new javax.swing.JTable();
         jLabel6 = new javax.swing.JLabel();
         jtxtBuscarEstudiante = new javax.swing.JTextField();
-        jbtnBuscar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -271,6 +340,12 @@ public class Estudiantes extends javax.swing.JInternalFrame {
         jLabel4.setText("Direccion");
 
         jLabel5.setText("Telefono");
+
+        jtxtCedula.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jtxtCedulaActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -355,6 +430,11 @@ public class Estudiantes extends javax.swing.JInternalFrame {
         });
 
         jbtnCancelar.setText("Cancelar");
+        jbtnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbtnCancelarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -400,13 +480,6 @@ public class Estudiantes extends javax.swing.JInternalFrame {
 
         jLabel6.setText("Buscar");
 
-        jbtnBuscar.setText("Buscar");
-        jbtnBuscar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jbtnBuscarActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -420,21 +493,18 @@ public class Estudiantes extends javax.swing.JInternalFrame {
                 .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(30, 30, 30)
                 .addComponent(jtxtBuscarEstudiante, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(50, 50, 50)
-                .addComponent(jbtnBuscar)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(19, 19, 19)
+                .addGap(20, 20, 20)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
-                    .addComponent(jtxtBuscarEstudiante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jbtnBuscar))
-                .addGap(22, 22, 22)
+                    .addComponent(jtxtBuscarEstudiante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(24, 24, 24)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(11, Short.MAX_VALUE))
+                .addContainerGap(15, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -482,9 +552,13 @@ public class Estudiantes extends javax.swing.JInternalFrame {
         botonesNuevo();
     }//GEN-LAST:event_jbtnNuevoActionPerformed
 
-    private void jbtnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnBuscarActionPerformed
+    private void jtxtCedulaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtxtCedulaActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jbtnBuscarActionPerformed
+    }//GEN-LAST:event_jtxtCedulaActionPerformed
+
+    private void jbtnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnCancelarActionPerformed
+btnCancelar();
+    }//GEN-LAST:event_jbtnCancelarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -503,7 +577,6 @@ public class Estudiantes extends javax.swing.JInternalFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JButton jbtnBuscar;
     private javax.swing.JButton jbtnCancelar;
     private javax.swing.JButton jbtnEditar;
     private javax.swing.JButton jbtnGuardar;

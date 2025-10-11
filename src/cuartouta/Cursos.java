@@ -158,7 +158,6 @@ public class Cursos extends javax.swing.JInternalFrame  {
         jbtnGuardar = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         jtxtNombreCurso = new javax.swing.JTextField();
-        jbtnBuscar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -185,13 +184,6 @@ public class Cursos extends javax.swing.JInternalFrame  {
 
         jLabel3.setText("Buscar Curso");
 
-        jbtnBuscar.setText("Buscar");
-        jbtnBuscar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jbtnBuscarActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -216,9 +208,7 @@ public class Cursos extends javax.swing.JInternalFrame  {
                                     .addComponent(jtxtCurso)
                                     .addComponent(jtxtNombreCurso, javax.swing.GroupLayout.DEFAULT_SIZE, 182, Short.MAX_VALUE))
                                 .addGap(52, 52, 52)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jbtnGuardar)
-                                    .addComponent(jbtnBuscar))))
+                                .addComponent(jbtnGuardar)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -232,13 +222,12 @@ public class Cursos extends javax.swing.JInternalFrame  {
                     .addComponent(jLabel2)
                     .addComponent(jtxtCurso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jbtnGuardar))
-                .addGap(30, 30, 30)
+                .addGap(31, 31, 31)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(jtxtNombreCurso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jbtnBuscar))
+                    .addComponent(jtxtNombreCurso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 216, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -262,10 +251,6 @@ public class Cursos extends javax.swing.JInternalFrame  {
         saveCourse();
     }//GEN-LAST:event_jbtnGuardarActionPerformed
 
-    private void jbtnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnBuscarActionPerformed
-        getData(jtxtNombreCurso.getText().trim());
-    }//GEN-LAST:event_jbtnBuscarActionPerformed
-
     // agregar handlers para editar y eliminar si deseas (NetBeans GUI builder puede haber botones adicionales)
 
 
@@ -275,7 +260,6 @@ public class Cursos extends javax.swing.JInternalFrame  {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JButton jbtnBuscar;
     private javax.swing.JButton jbtnGuardar;
     private javax.swing.JTable jtblCursos;
     private javax.swing.JTextField jtxtCurso;

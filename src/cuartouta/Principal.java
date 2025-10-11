@@ -4,13 +4,20 @@
  */
 package cuartouta;
 
-import reportes.ReporteEstudiantes;
-import reportes.VisorPDF;
+//import reportes.ReporteEstudiantes;
+//import reportes.VisorPDF;
+import java.sql.Connection;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 import java.awt.event.KeyEvent;
 import java.awt.event.InputEvent;
 import java.awt.Rectangle;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import net.sf.jasperreports.engine.*;
+
+import net.sf.jasperreports.view.JasperViewer;
 
 
 /**
@@ -313,19 +320,24 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     private void jmniEstudiantesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmniEstudiantesActionPerformed
-        try {
-        String ruta = ReporteEstudiantes.generarPDF();
-        VisorPDF.mostrarPDF(ruta);
-    } catch (Exception ex) {
-        JOptionPane.showMessageDialog(this, "Error al generar el reporte: " + ex.getMessage());
-        ex.printStackTrace();
-    }
+       try {
+                 Conexion con = new Conexion();
+            Connection cc = (Connection) con.conectar();
+            JasperReport reporte = JasperCompileManager.compileReport("src\\Reportes\\General.jrxml");
+            JasperPrint imprimir;
+           imprimir = JasperFillManager.fillReport(reporte, null, cc);
+            JasperViewer.viewReport(imprimir,false);
+        } catch (JRException ex) {
+            JOptionPane.showMessageDialog(this, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jmniEstudiantesActionPerformed
 
     private void jmniCursosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmniCursosActionPerformed
         try {
-            String ruta = reportes.ReporteCursos.generarPDF();
-            VisorPDF.mostrarPDF(ruta);
+//            String ruta = reportes.ReporteCursos.generarPDF();
+//            VisorPDF.mostrarPDF(ruta);
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Error al generar el reporte de cursos: " + ex.getMessage());
             ex.printStackTrace();
@@ -334,8 +346,8 @@ public class Principal extends javax.swing.JFrame {
 
     private void jmniInscripcionesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmniInscripcionesActionPerformed
         try {
-            String ruta = reportes.ReporteInscripciones.generarPDF();
-            VisorPDF.mostrarPDF(ruta);
+//            String ruta = reportes.ReporteInscripciones.generarPDF();
+//            VisorPDF.mostrarPDF(ruta);
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Error al generar el reporte de inscripciones: " + ex.getMessage());
             ex.printStackTrace();
