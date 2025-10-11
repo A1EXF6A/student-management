@@ -67,13 +67,6 @@ un.ps1` si tienes las librerías puestas y el script configurado.
 
 ---
 
-Si quieres, puedo:
-- Añadir un `CONTRIBUTING.md` y `LICENSE`.
-- Limpiar/archivar automáticamente `build/`, `dist/` y archivos PDF.
-- Incluir las JARs recomendadas en `lib/`.
-
-Dime si quieres que haga alguno de estos pasos adicionales.
-
 ## Esquema de base de datos (SQL)
 
 A continuación se incluyen los scripts SQL para crear las tablas usadas por la aplicación: `estudiante`, `cursos` y `estudiante_curso`.
@@ -121,5 +114,3 @@ Notas:
 - `est_cedula` se usa como PK en `estudiante` y como FK en `estudiante_curso`.
 - La aplicación actualmente busca `cursoid` por `nombre` y usa `est_cedula` para las inscripciones.
 - Si tu columna `est_cedula` en la base de datos tiene otra longitud, ajusta `VARCHAR(50)` al valor real.
-
-Si quieres, puedo añadir un script `db/init.sql` al repositorio con estos comandos y/o crear un pequeño script Java/Powershell para poblar datos de ejemplo.
