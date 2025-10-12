@@ -74,14 +74,11 @@
                           <EmptySpace max="32767" attributes="0"/>
                       </Group>
                   </Group>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jbtnBuscar" min="-2" pref="81" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                          <Component id="jbtnInscribir" max="32767" attributes="0"/>
-                          <Component id="jbtnNuevo" alignment="1" max="32767" attributes="0"/>
-                          <Component id="jbtnEliminar" alignment="1" max="32767" attributes="0"/>
-                          <Component id="jbtnCancelar" alignment="1" pref="81" max="32767" attributes="0"/>
-                      </Group>
+                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                      <Component id="jbtnInscribir" max="32767" attributes="0"/>
+                      <Component id="jbtnNuevo" alignment="1" max="32767" attributes="0"/>
+                      <Component id="jbtnEliminar" alignment="1" max="32767" attributes="0"/>
+                      <Component id="jbtnCancelar" alignment="1" pref="81" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="51" max="-2" attributes="0"/>
               </Group>
@@ -109,14 +106,11 @@
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="jbtnCancelar" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jbtnBuscar" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jtxtBuscarEstudiante" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jtxtBuscarEstudiante" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
                   <Component id="jScrollPane1" min="-2" pref="259" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="51" max="-2" attributes="0"/>
               </Group>
@@ -183,14 +177,6 @@
         <Component class="javax.swing.JTextField" name="jtxtBuscarEstudiante">
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jtxtBuscarEstudianteActionPerformed"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JButton" name="jbtnBuscar">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Buscar"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbtnBuscarActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JButton" name="jbtnInscribir">

@@ -5,12 +5,14 @@
 package cuartouta;
 
 import java.sql.*;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author DELL
  */
-public class Cursos extends javax.swing.JInternalFrame  {
+public class Cursos extends javax.swing.JInternalFrame {
 
     /**
      * Creates new form cursos
@@ -21,45 +23,53 @@ public class Cursos extends javax.swing.JInternalFrame  {
         this.setClosable(true);
         initLogic();
     }
-    
+
     // --- lógica similar a Estudiantes ---
     private java.sql.Connection cc;
     private Conexion con = new Conexion();
-    private javax.swing.table.DefaultTableModel table;
+    private DefaultTableModel table;
 
     private void initLogic() {
-        table = new javax.swing.table.DefaultTableModel();
+        table = new DefaultTableModel();
         this.jtblCursos.setModel(table);
         table.addColumn("NOMBRE");
         getData("");
         cargardatos();
         // búsqueda dinámica en jtxtNombreCurso
         jtxtNombreCurso.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
-            public void insertUpdate(javax.swing.event.DocumentEvent e) { getData(jtxtNombreCurso.getText().trim()); }
-            public void removeUpdate(javax.swing.event.DocumentEvent e) { getData(jtxtNombreCurso.getText().trim()); }
-            public void changedUpdate(javax.swing.event.DocumentEvent e) { getData(jtxtNombreCurso.getText().trim()); }
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                getData(jtxtNombreCurso.getText().trim());
+            }
+
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                getData(jtxtNombreCurso.getText().trim());
+            }
+
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                getData(jtxtNombreCurso.getText().trim());
+            }
         });
     }
 
     public void saveCourse() {
         try {
             if (jtxtCurso.getText().trim().isEmpty()) {
-                javax.swing.JOptionPane.showMessageDialog(this, "Es obligatorio el nombre del curso");
+                JOptionPane.showMessageDialog(this, "Es obligatorio el nombre del curso");
                 jtxtCurso.requestFocus();
                 return;
             }
             Connection cc = con.conectar();
             String sql = "INSERT INTO cursos (nombre) VALUES (?)";
-            java.sql.PreparedStatement ps = cc.prepareStatement(sql);
+            PreparedStatement ps = cc.prepareStatement(sql);
             ps.setString(1, jtxtCurso.getText().trim());
             int n = ps.executeUpdate();
             if (n > 0) {
-                javax.swing.JOptionPane.showMessageDialog(this, "Curso registrado correctamente.");
+                JOptionPane.showMessageDialog(this, "Curso registrado correctamente.");
                 getData("");
                 jtxtCurso.setText("");
             }
         } catch (Exception ex) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
+            JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
         }
     }
 
@@ -68,16 +78,18 @@ public class Cursos extends javax.swing.JInternalFrame  {
             table.setRowCount(0);
             Connection cc = con.conectar();
             String sql = "SELECT nombre FROM cursos" + (filter != null && !filter.isEmpty() ? " WHERE nombre LIKE ?" : "");
-            java.sql.PreparedStatement ps = cc.prepareStatement(sql);
-            if (filter != null && !filter.isEmpty()) ps.setString(1, "%" + filter + "%");
-            java.sql.ResultSet rs = ps.executeQuery();
+            PreparedStatement ps = cc.prepareStatement(sql);
+            if (filter != null && !filter.isEmpty()) {
+                ps.setString(1, "%" + filter + "%");
+            }
+            ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 String[] row = new String[1];
                 row[0] = rs.getString("nombre");
                 table.addRow(row);
             }
         } catch (Exception ex) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
+            JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
         }
     }
 
@@ -85,24 +97,24 @@ public class Cursos extends javax.swing.JInternalFrame  {
         try {
             int row = jtblCursos.getSelectedRow();
             if (row == -1) {
-                javax.swing.JOptionPane.showMessageDialog(this, "Seleccione un curso para eliminar");
+                JOptionPane.showMessageDialog(this, "Seleccione un curso para eliminar");
                 return;
             }
             String nombre = jtblCursos.getValueAt(row, 0).toString();
-            if (javax.swing.JOptionPane.showConfirmDialog(null, "ESTAS SEGURO DE ELIMINAR", "ELIMINAR CURSO", javax.swing.JOptionPane.YES_NO_OPTION)
-                    == javax.swing.JOptionPane.YES_NO_OPTION) {
+            if (JOptionPane.showConfirmDialog(null, "ESTAS SEGURO DE ELIMINAR", "ELIMINAR CURSO", JOptionPane.YES_NO_OPTION)
+                    == JOptionPane.YES_NO_OPTION) {
                 Connection cc = con.conectar();
                 String sql = "DELETE FROM cursos WHERE nombre = ?";
-                java.sql.PreparedStatement ps = cc.prepareStatement(sql);
+                PreparedStatement ps = cc.prepareStatement(sql);
                 ps.setString(1, nombre);
                 int n = ps.executeUpdate();
                 if (n > 0) {
-                    javax.swing.JOptionPane.showMessageDialog(this, "SE ELIMINO CORRECTAMENTE");
+                    JOptionPane.showMessageDialog(this, "SE ELIMINO CORRECTAMENTE");
                     getData("");
                 }
             }
         } catch (Exception ex) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
+            JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
         }
     }
 
@@ -110,27 +122,27 @@ public class Cursos extends javax.swing.JInternalFrame  {
         try {
             int row = jtblCursos.getSelectedRow();
             if (row == -1) {
-                javax.swing.JOptionPane.showMessageDialog(this, "Seleccione un curso para editar");
+                JOptionPane.showMessageDialog(this, "Seleccione un curso para editar");
                 return;
             }
             String oldName = jtblCursos.getValueAt(row, 0).toString();
             String newName = jtxtNombreCurso.getText().trim();
             if (newName.isEmpty()) {
-                javax.swing.JOptionPane.showMessageDialog(this, "El nombre nuevo no puede estar vacío");
+                JOptionPane.showMessageDialog(this, "El nombre nuevo no puede estar vacío");
                 return;
             }
             Connection cc = con.conectar();
             String sql = "UPDATE cursos SET nombre = ? WHERE nombre = ?";
-            java.sql.PreparedStatement ps = cc.prepareStatement(sql);
+            PreparedStatement ps = cc.prepareStatement(sql);
             ps.setString(1, newName);
             ps.setString(2, oldName);
             int n = ps.executeUpdate();
             if (n > 0) {
-                javax.swing.JOptionPane.showMessageDialog(this, "SE ACTUALIZÓ CORRECTAMENTE");
+                JOptionPane.showMessageDialog(this, "SE ACTUALIZÓ CORRECTAMENTE");
                 getData("");
             }
         } catch (Exception ex) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
+            JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
         }
     }
 
@@ -145,6 +157,7 @@ public class Cursos extends javax.swing.JInternalFrame  {
             }
         });
     }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -174,6 +187,12 @@ public class Cursos extends javax.swing.JInternalFrame  {
         jLabel1.setText("Gestion de Cursos");
 
         jLabel2.setText("Nombre");
+
+        jtxtCurso.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jtxtCursoKeyTyped(evt);
+            }
+        });
 
         jbtnGuardar.setText("Guardar");
         jbtnGuardar.addActionListener(new java.awt.event.ActionListener() {
@@ -251,8 +270,14 @@ public class Cursos extends javax.swing.JInternalFrame  {
         saveCourse();
     }//GEN-LAST:event_jbtnGuardarActionPerformed
 
-    // agregar handlers para editar y eliminar si deseas (NetBeans GUI builder puede haber botones adicionales)
+    private void jtxtCursoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtxtCursoKeyTyped
+        char a = evt.getKeyChar();
+        if (!Character.isAlphabetic(a)) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_jtxtCursoKeyTyped
 
+    // agregar handlers para editar y eliminar si deseas (NetBeans GUI builder puede haber botones adicionales)
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;

@@ -323,7 +323,7 @@ public class Principal extends javax.swing.JFrame {
        try {
                  Conexion con = new Conexion();
             Connection cc = (Connection) con.conectar();
-            JasperReport reporte = JasperCompileManager.compileReport("src\\Reportes\\General.jrxml");
+            JasperReport reporte = JasperCompileManager.compileReport("src\\reportes\\estudiantes.jrxml");
             JasperPrint imprimir;
            imprimir = JasperFillManager.fillReport(reporte, null, cc);
             JasperViewer.viewReport(imprimir,false);
@@ -336,21 +336,31 @@ public class Principal extends javax.swing.JFrame {
 
     private void jmniCursosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmniCursosActionPerformed
         try {
-//            String ruta = reportes.ReporteCursos.generarPDF();
-//            VisorPDF.mostrarPDF(ruta);
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Error al generar el reporte de cursos: " + ex.getMessage());
-            ex.printStackTrace();
+                 Conexion con = new Conexion();
+            Connection cc = (Connection) con.conectar();
+            JasperReport reporte = JasperCompileManager.compileReport("src\\reportes\\cursos.jrxml");
+            JasperPrint imprimir;
+           imprimir = JasperFillManager.fillReport(reporte, null, cc);
+            JasperViewer.viewReport(imprimir,false);
+        } catch (JRException ex) {
+            JOptionPane.showMessageDialog(this, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jmniCursosActionPerformed
 
     private void jmniInscripcionesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmniInscripcionesActionPerformed
         try {
-//            String ruta = reportes.ReporteInscripciones.generarPDF();
-//            VisorPDF.mostrarPDF(ruta);
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Error al generar el reporte de inscripciones: " + ex.getMessage());
-            ex.printStackTrace();
+                 Conexion con = new Conexion();
+            Connection cc = (Connection) con.conectar();
+            JasperReport reporte = JasperCompileManager.compileReport("src\\reportes\\inscripciones.jrxml");
+            JasperPrint imprimir;
+           imprimir = JasperFillManager.fillReport(reporte, null, cc);
+            JasperViewer.viewReport(imprimir,false);
+        } catch (JRException ex) {
+            JOptionPane.showMessageDialog(this, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jmniInscripcionesActionPerformed
 

@@ -57,3 +57,4 @@ venv/
 # If you intentionally want to commit jars into lib/, remove the following line
 # (we ignore lib/ by default to encourage storing jars outside VCS)
 
+/dist/

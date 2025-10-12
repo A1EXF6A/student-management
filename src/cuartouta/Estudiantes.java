@@ -45,65 +45,81 @@ public class Estudiantes extends javax.swing.JInternalFrame {
         textoInicio();
         // búsqueda dinámica en el campo de búsqueda
         jtxtBuscarEstudiante.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
-            public void insertUpdate(javax.swing.event.DocumentEvent e) { getData(jtxtBuscarEstudiante.getText().trim()); }
-            public void removeUpdate(javax.swing.event.DocumentEvent e) { getData(jtxtBuscarEstudiante.getText().trim()); }
-            public void changedUpdate(javax.swing.event.DocumentEvent e) { getData(jtxtBuscarEstudiante.getText().trim()); }
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                getData(jtxtBuscarEstudiante.getText().trim());
+            }
+
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                getData(jtxtBuscarEstudiante.getText().trim());
+            }
+
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                getData(jtxtBuscarEstudiante.getText().trim());
+            }
         });
-          jtxtCedula.addKeyListener(new java.awt.event.KeyAdapter() {
-        @Override
-        public void keyTyped(java.awt.event.KeyEvent evt) {
-            char c = evt.getKeyChar();
+        jtxtCedula.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                char c = evt.getKeyChar();
 
-            // Si no es un dígito o ya hay 10 caracteres, no permite más entrada
-            if (!Character.isDigit(c) || jtxtCedula.getText().length() >= 10) {
-                evt.consume(); // Bloquea el carácter
+                // Si no es un dígito o ya hay 10 caracteres, no permite más entrada
+                if (!Character.isDigit(c) || jtxtCedula.getText().length() >= 10) {
+                    evt.consume(); // Bloquea el carácter
+                }
             }
-        }
-    });
-          jtxtTelefono.addKeyListener(new java.awt.event.KeyAdapter() {
-        @Override
-        public void keyTyped(java.awt.event.KeyEvent evt) {
-            char c = evt.getKeyChar();
+        });
+        jtxtTelefono.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                char c = evt.getKeyChar();
+                String texto = jtxtTelefono.getText();
+                // Solo permite números y un máximo de 10 dígitos
+                if (!Character.isDigit(c) || texto.length() >= 10) {
+                    evt.consume();
+                    return;
+                }
+                // Validar que empiece con 09
+                if (texto.length() == 0 && c != '0') {
+                    evt.consume(); // primer dígito debe ser 0
+                } else if (texto.length() == 1 && c != '9') {
+                    evt.consume(); // segundo dígito debe ser 9
+                }
+            }
+        });
 
-            // Si no es un dígito o ya hay 10 caracteres, no permite más entrada
-            if (!Character.isDigit(c) || jtxtTelefono.getText().length() >= 10) {
-                evt.consume(); // Bloquea el carácter
-            }
-        }
-    });
-             jtxtNombre.addKeyListener(new java.awt.event.KeyAdapter() {
-        @Override
-        public void keyTyped(java.awt.event.KeyEvent evt) {
-            char c = evt.getKeyChar();
+        jtxtNombre.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                char c = evt.getKeyChar();
 
-            // Solo permite letras, espacios y la tecla de retroceso
-            if ((!Character.isLetter(c) && c != ' ' && c != '\b') 
-                    || jtxtNombre.getText().length() >= 50) {
-                evt.consume(); // Bloquea si no cumple las condiciones
+                // Solo permite letras, espacios y la tecla de retroceso
+                if ((!Character.isLetter(c) && c != ' ' && c != '\b')
+                        || jtxtNombre.getText().length() >= 50) {
+                    evt.consume(); // Bloquea si no cumple las condiciones
+                }
             }
-        }
-    });
-               jtxtApellido.addKeyListener(new java.awt.event.KeyAdapter() {
-        @Override
-        public void keyTyped(java.awt.event.KeyEvent evt) {
-            char c = evt.getKeyChar();
+        });
+        jtxtApellido.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                char c = evt.getKeyChar();
 
-            // Solo permite letras, espacios y la tecla de retroceso
-            if ((!Character.isLetter(c) && c != ' ' && c != '\b') 
-                    || jtxtApellido.getText().length() >= 50) {
-                evt.consume(); // Bloquea si no cumple las condiciones
+                // Solo permite letras, espacios y la tecla de retroceso
+                if ((!Character.isLetter(c) && c != ' ' && c != '\b')
+                        || jtxtApellido.getText().length() >= 50) {
+                    evt.consume(); // Bloquea si no cumple las condiciones
+                }
             }
-        }
-    });
-             jtxtDireccion.addKeyListener(new java.awt.event.KeyAdapter() {
-    @Override
-    public void keyTyped(java.awt.event.KeyEvent evt) {
-        // Limita a 50 caracteres máximo
-        if (jtxtDireccion.getText().length() >= 50) {
-            evt.consume(); // No deja escribir más
-        }
-    }
-});
+        });
+        jtxtDireccion.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                // Limita a 50 caracteres máximo
+                if (jtxtDireccion.getText().length() >= 50) {
+                    evt.consume(); // No deja escribir más
+                }
+            }
+        });
 
     }
 
@@ -133,7 +149,7 @@ public class Estudiantes extends javax.swing.JInternalFrame {
                 int n = psd.executeUpdate();
                 if (n > 0) {
                     JOptionPane.showMessageDialog(this, "Estudiante registrado correctamente.");
-                        getData("");
+                    getData("");
                     botones();
                     textoInicio();
                 }
@@ -144,6 +160,7 @@ public class Estudiantes extends javax.swing.JInternalFrame {
         }
         // clean();
     }
+
     public void btnCancelar() {
         jtxtCedula.setEnabled(false);
         jtxtNombre.setEnabled(false);
@@ -208,7 +225,7 @@ public class Estudiantes extends javax.swing.JInternalFrame {
                 int n = psd.executeUpdate();
                 if (n > 0) {
                     JOptionPane.showMessageDialog(this, "SE ELIMINO CORRECTAMENTE");
-                        getData("");
+                    getData("");
                 }
             }
         } catch (Exception ex) {
@@ -231,7 +248,7 @@ public class Estudiantes extends javax.swing.JInternalFrame {
 
             if (n > 0) {
                 JOptionPane.showMessageDialog(this, "SE ACTUALIZÓ CORRECTAMENTE");
-                    getData("");  // Refresca la tabla
+                getData("");  // Refresca la tabla
                 clean();    // Limpia los campos
             }
         } catch (Exception ex) {
@@ -257,15 +274,15 @@ public class Estudiantes extends javax.swing.JInternalFrame {
         });
     }
 
-    public void botonesEliminarActualizar(){
+    public void botonesEliminarActualizar() {
         jbtnNuevo.setEnabled(false);
         jbtnGuardar.setEnabled(false);
         jbtnEditar.setEnabled(true);
         JbtnEliminar.setEnabled(true);
         jbtnCancelar.setEnabled(true);
-       
+
     }
-    
+
     public void botones() {
         jbtnNuevo.setEnabled(true);
         jbtnGuardar.setEnabled(false);
@@ -557,13 +574,12 @@ public class Estudiantes extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_jtxtCedulaActionPerformed
 
     private void jbtnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnCancelarActionPerformed
-btnCancelar();
+        btnCancelar();
     }//GEN-LAST:event_jbtnCancelarActionPerformed
 
     /**
      * @param args the command line arguments
      */
-    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton JbtnEliminar;

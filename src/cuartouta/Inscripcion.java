@@ -5,12 +5,14 @@
 package cuartouta;
 
 import java.sql.*;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author DELL
  */
-public class Inscripcion extends javax.swing.JInternalFrame  {
+public class Inscripcion extends javax.swing.JInternalFrame {
 
     /**
      * Creates new form Inscripcion
@@ -24,23 +26,42 @@ public class Inscripcion extends javax.swing.JInternalFrame  {
 
     // lógica similar a Estudiantes
     private Conexion con = new Conexion();
-    private javax.swing.table.DefaultTableModel table;
+    private DefaultTableModel table;
 
     private void initLogic() {
-        table = new javax.swing.table.DefaultTableModel();
+        table = new DefaultTableModel();
         this.jtblDatosCursos.setModel(table);
         table.addColumn("CURSO");
         table.addColumn("CEDULA");
         table.addColumn("ESTUDIANTE");
-
+        start();
         loadEstudiantes();
         loadCursos();
         loadInscripciones("");
+
+        jtblDatosCursos.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                int fila = jtblDatosCursos.getSelectedRow();
+                if (fila != -1) {
+                    delete(); // activa botones y espera confirmación del usuario
+                }
+            }
+        });
+
         // búsqueda dinámica en el campo jtxtBuscarEstudiante
         jtxtBuscarEstudiante.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
-            public void insertUpdate(javax.swing.event.DocumentEvent e) { loadInscripciones(jtxtBuscarEstudiante.getText().trim()); }
-            public void removeUpdate(javax.swing.event.DocumentEvent e) { loadInscripciones(jtxtBuscarEstudiante.getText().trim()); }
-            public void changedUpdate(javax.swing.event.DocumentEvent e) { loadInscripciones(jtxtBuscarEstudiante.getText().trim()); }
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                loadInscripciones(jtxtBuscarEstudiante.getText().trim());
+            }
+
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                loadInscripciones(jtxtBuscarEstudiante.getText().trim());
+            }
+
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                loadInscripciones(jtxtBuscarEstudiante.getText().trim());
+            }
         });
     }
 
@@ -49,16 +70,16 @@ public class Inscripcion extends javax.swing.JInternalFrame  {
             jcbxEstudiantes.removeAllItems();
             Connection cc = con.conectar();
             String sql = "SELECT est_cedula, est_nombre, est_apellido FROM estudiante";
-            java.sql.Statement st = cc.createStatement();
-            java.sql.ResultSet rs = st.executeQuery(sql);
+            Statement st = cc.createStatement();
+            ResultSet rs = st.executeQuery(sql);
             while (rs.next()) {
                 String ced = rs.getString("est_cedula");
                 String nom = rs.getString("est_nombre");
                 String ape = rs.getString("est_apellido");
-                jcbxEstudiantes.addItem(ced + "-" + nom+"-"+ape);
+                jcbxEstudiantes.addItem(ced + "-" + nom + "-" + ape);
             }
         } catch (Exception ex) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Error cargando estudiantes: " + ex.getMessage());
+            JOptionPane.showMessageDialog(this, "Error cargando estudiantes: " + ex.getMessage());
         }
     }
 
@@ -67,15 +88,15 @@ public class Inscripcion extends javax.swing.JInternalFrame  {
             jcbxCursos.removeAllItems();
             Connection cc = con.conectar();
             String sql = "SELECT cursoid, nombre FROM cursos";
-            java.sql.Statement st = cc.createStatement();
-            java.sql.ResultSet rs = st.executeQuery(sql);
+            Statement st = cc.createStatement();
+            ResultSet rs = st.executeQuery(sql);
             while (rs.next()) {
                 // Sólo añadimos el nombre al combobox (no el id)
                 String nom = rs.getString("nombre");
                 jcbxCursos.addItem(nom);
             }
         } catch (Exception ex) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Error cargando cursos: " + ex.getMessage());
+            JOptionPane.showMessageDialog(this, "Error cargando cursos: " + ex.getMessage());
         }
     }
 
@@ -87,7 +108,7 @@ public class Inscripcion extends javax.swing.JInternalFrame  {
                     + "FROM estudiante_curso ec "
                     + "JOIN estudiante e ON ec.est_cedula = e.est_cedula "
                     + "JOIN cursos c ON ec.cursoid = c.cursoid";
-            java.sql.PreparedStatement ps;
+            PreparedStatement ps;
             if (cedFilter != null && !cedFilter.isEmpty()) {
                 sql += " WHERE e.est_cedula LIKE ?";
                 ps = cc.prepareStatement(sql);
@@ -95,7 +116,7 @@ public class Inscripcion extends javax.swing.JInternalFrame  {
             } else {
                 ps = cc.prepareStatement(sql);
             }
-            java.sql.ResultSet rs = ps.executeQuery();
+            ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 String[] row = new String[3];
                 row[0] = rs.getString("curso");
@@ -104,20 +125,20 @@ public class Inscripcion extends javax.swing.JInternalFrame  {
                 table.addRow(row);
             }
         } catch (Exception ex) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Error cargando inscripciones: " + ex.getMessage());
+            JOptionPane.showMessageDialog(this, "Error cargando inscripciones: " + ex.getMessage());
         }
     }
 
     private void saveInscripcion() {
         try {
             if (jcbxEstudiantes.getItemCount() == 0 || jcbxCursos.getItemCount() == 0) {
-                javax.swing.JOptionPane.showMessageDialog(this, "No hay estudiantes o cursos para inscribir");
+                JOptionPane.showMessageDialog(this, "No hay estudiantes o cursos para inscribir");
                 return;
             }
             String estItem = (String) jcbxEstudiantes.getSelectedItem();
             String cursoNombre = (String) jcbxCursos.getSelectedItem();
             if (estItem == null || estItem.trim().isEmpty()) {
-                javax.swing.JOptionPane.showMessageDialog(this, "Seleccione un estudiante válido");
+                JOptionPane.showMessageDialog(this, "Seleccione un estudiante válido");
                 return;
             }
             // estItem was populated as "cedula-nombre-apellido" (no spaces).
@@ -131,60 +152,63 @@ public class Inscripcion extends javax.swing.JInternalFrame  {
             }
             // Basic validation: cedula length should be reasonable (avoid inserting huge strings)
             if (ced.length() == 0 || ced.length() > 50) {
-                javax.swing.JOptionPane.showMessageDialog(this, "Cédula de estudiante inválida: '" + ced + "'");
+                JOptionPane.showMessageDialog(this, "Cédula de estudiante inválida: '" + ced + "'");
                 return;
             }
             Connection cc = con.conectar();
             // Buscar cursoid por nombre (usamos PreparedStatement por si el nombre tiene caracteres especiales)
             String q = "SELECT cursoid FROM cursos WHERE nombre = ? LIMIT 1";
-            java.sql.PreparedStatement qst = cc.prepareStatement(q);
+            PreparedStatement qst = cc.prepareStatement(q);
             qst.setString(1, cursoNombre);
-            java.sql.ResultSet qrs = qst.executeQuery();
+            ResultSet qrs = qst.executeQuery();
             if (!qrs.next()) {
-                javax.swing.JOptionPane.showMessageDialog(this, "No se encontró el curso seleccionado.");
+                JOptionPane.showMessageDialog(this, "No se encontró el curso seleccionado.");
                 return;
             }
             int cursoid = qrs.getInt("cursoid");
             // Verify that the estudiante exists (to avoid FK error)
             String checkEst = "SELECT est_cedula FROM estudiante WHERE est_cedula = ?";
-            java.sql.PreparedStatement psCheck = cc.prepareStatement(checkEst);
+            PreparedStatement psCheck = cc.prepareStatement(checkEst);
             psCheck.setString(1, ced);
-            java.sql.ResultSet rsCheck = psCheck.executeQuery();
+            ResultSet rsCheck = psCheck.executeQuery();
             if (!rsCheck.next()) {
-                javax.swing.JOptionPane.showMessageDialog(this, "El estudiante seleccionado no existe en la base de datos: " + ced);
+                JOptionPane.showMessageDialog(this, "El estudiante seleccionado no existe en la base de datos: " + ced);
                 return;
             }
 
             // Get column max size for est_cedula to avoid data truncation errors
             int maxSize = -1;
             try {
-                java.sql.DatabaseMetaData md = cc.getMetaData();
-                java.sql.ResultSet cols = md.getColumns(null, null, "estudiante", "est_cedula");
+                DatabaseMetaData md = cc.getMetaData();
+                ResultSet cols = md.getColumns(null, null, "estudiante", "est_cedula");
                 if (cols.next()) {
                     maxSize = cols.getInt("COLUMN_SIZE");
                 }
-                if (cols != null) cols.close();
+                if (cols != null) {
+                    cols.close();
+                }
             } catch (Exception mm) {
                 // ignore metadata failures, we'll rely on basic validation
             }
             if (maxSize > 0 && ced.length() > maxSize) {
-                javax.swing.JOptionPane.showMessageDialog(this, "La cédula es demasiado larga (" + ced.length() + " > " + maxSize + ")");
+                JOptionPane.showMessageDialog(this, "La cédula es demasiado larga (" + ced.length() + " > " + maxSize + ")");
                 return;
             }
 
             String sql = "INSERT INTO estudiante_curso (est_cedula, cursoid) VALUES (?, ?)";
-            java.sql.PreparedStatement ps = cc.prepareStatement(sql);
+            PreparedStatement ps = cc.prepareStatement(sql);
             ps.setString(1, ced);
             ps.setInt(2, cursoid);
             int n = ps.executeUpdate();
             if (n > 0) {
-                javax.swing.JOptionPane.showMessageDialog(this, "Inscripción realizada");
+                JOptionPane.showMessageDialog(this, "Inscripción realizada");
                 loadInscripciones("");
+                start();
             }
         } catch (java.sql.SQLIntegrityConstraintViolationException ex) {
-            javax.swing.JOptionPane.showMessageDialog(this, "La inscripción ya existe o hay un error: " + ex.getMessage());
+            JOptionPane.showMessageDialog(this, "La inscripción ya existe o hay un error");
         } catch (Exception ex) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Error al inscribir: " + ex.getMessage());
+            JOptionPane.showMessageDialog(this, "Error al inscribir: " + ex.getMessage());
         }
     }
 
@@ -192,28 +216,29 @@ public class Inscripcion extends javax.swing.JInternalFrame  {
         try {
             int row = jtblDatosCursos.getSelectedRow();
             if (row == -1) {
-                javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una inscripción para eliminar");
+                JOptionPane.showMessageDialog(this, "Seleccione una inscripción para eliminar");
                 return;
             }
             String ced = jtblDatosCursos.getValueAt(row, 1).toString();
             String curso = jtblDatosCursos.getValueAt(row, 0).toString();
-            if (javax.swing.JOptionPane.showConfirmDialog(null, "ESTAS SEGURO DE ELIMINAR", "ELIMINAR INSCRIPCION", javax.swing.JOptionPane.YES_NO_OPTION)
-                    == javax.swing.JOptionPane.YES_NO_OPTION) {
+            if (JOptionPane.showConfirmDialog(this, "ESTAS SEGURO DE ELIMINAR", "ELIMINAR INSCRIPCION", JOptionPane.YES_NO_OPTION)
+                    == JOptionPane.YES_NO_OPTION) {
                 Connection cc = con.conectar();
                 String sql = "DELETE ec FROM estudiante_curso ec "
                         + "JOIN cursos c ON ec.cursoid = c.cursoid "
                         + "WHERE ec.est_cedula = ? AND c.nombre = ?";
-                java.sql.PreparedStatement ps = cc.prepareStatement(sql);
+                PreparedStatement ps = cc.prepareStatement(sql);
                 ps.setString(1, ced);
                 ps.setString(2, curso);
                 int n = ps.executeUpdate();
                 if (n > 0) {
-                    javax.swing.JOptionPane.showMessageDialog(this, "Inscripción eliminada");
+                    JOptionPane.showMessageDialog(this, "Inscripción eliminada");
                     loadInscripciones("");
+                    start();
                 }
             }
         } catch (Exception ex) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Error al eliminar: " + ex.getMessage());
+            JOptionPane.showMessageDialog(this, "Error al eliminar: " + ex.getMessage());
         }
     }
 
@@ -221,11 +246,32 @@ public class Inscripcion extends javax.swing.JInternalFrame  {
         loadInscripciones(ced);
     }
 
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
+    public void start() {
+        jbtnNuevo.setEnabled(true);
+        jbtnInscribir.setEnabled(false);
+        jbtnEliminar.setEnabled(false);
+        jbtnCancelar.setEnabled(true);
+        jcbxCursos.setEnabled(false);
+        jcbxEstudiantes.setEnabled(false);
+    }
+
+    public void newRegistration() {
+        jbtnNuevo.setEnabled(false);
+        jbtnInscribir.setEnabled(true);
+        jbtnEliminar.setEnabled(false);
+        jbtnCancelar.setEnabled(true);
+        jcbxCursos.setEnabled(true);
+        jcbxEstudiantes.setEnabled(true);
+
+    }
+
+    public void delete() {
+        jbtnNuevo.setEnabled(false);
+        jbtnInscribir.setEnabled(false);
+        jbtnEliminar.setEnabled(true);
+        jbtnCancelar.setEnabled(true);
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -385,7 +431,8 @@ public class Inscripcion extends javax.swing.JInternalFrame  {
     }//GEN-LAST:event_jtxtBuscarEstudianteActionPerformed
 
     private void jbtnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnCancelarActionPerformed
-        // limpiar y recargar
+        // limpiar
+        start();
         loadEstudiantes();
         loadCursos();
         loadInscripciones("");
@@ -393,6 +440,7 @@ public class Inscripcion extends javax.swing.JInternalFrame  {
 
     private void jbtnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnNuevoActionPerformed
         // preparar para nueva inscripción
+        newRegistration();
         jcbxEstudiantes.setSelectedIndex(0);
         jcbxCursos.setSelectedIndex(0);
     }//GEN-LAST:event_jbtnNuevoActionPerformed
@@ -405,7 +453,6 @@ public class Inscripcion extends javax.swing.JInternalFrame  {
         deleteInscripcion();
     }//GEN-LAST:event_jbtnEliminarActionPerformed
 
- 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
