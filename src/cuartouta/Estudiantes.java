@@ -66,28 +66,10 @@ public class Estudiantes extends javax.swing.JInternalFrame {
                 getData(jtxtBuscarEstudiante.getText().trim());
             }
         });
-        jtxtGenero.addKeyListener(new java.awt.event.KeyAdapter() {
-            @Override
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                validarGenero();
-            }
-
-            @Override
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                char c = evt.getKeyChar();
-                // Solo letras y espacios permitidos
-                if (!Character.isLetter(c) && c != ' ') {
-                    evt.consume();
-                }
-            }
-        });
-        
-
         jtxtCedula.addKeyListener(new java.awt.event.KeyAdapter() {
             @Override
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 char c = evt.getKeyChar();
-
                 // Si no es un dígito o ya hay 10 caracteres, no permite más entrada
                 if (!Character.isDigit(c) || jtxtCedula.getText().length() >= 10) {
                     evt.consume(); // Bloquea el carácter
@@ -117,7 +99,6 @@ public class Estudiantes extends javax.swing.JInternalFrame {
             @Override
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 char c = evt.getKeyChar();
-
                 // Solo permite letras, espacios y la tecla de retroceso
                 if ((!Character.isLetter(c) && c != ' ' && c != '\b')
                         || jtxtNombre.getText().length() >= 50) {
@@ -250,7 +231,7 @@ public class Estudiantes extends javax.swing.JInternalFrame {
 
     public void deleteStudent() {
         try {
-            if (JOptionPane.showConfirmDialog(null, "ESTAS SEGURO DE ELIMINAR", "ELIMINAR ESTUDIANTE", JOptionPane.YES_NO_OPTION)
+            if (JOptionPane.showConfirmDialog(this, "ESTAS SEGURO DE ELIMINAR", "ELIMINAR ESTUDIANTE", JOptionPane.YES_NO_OPTION)
                     == JOptionPane.YES_NO_OPTION) {
                 Connection cc = con.conectar();
                 String sql = "delete from estudiante where est_cedula = '" + jtxtCedula.getText() + "'";
@@ -297,7 +278,7 @@ public class Estudiantes extends javax.swing.JInternalFrame {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 if (jtblDatos.getSelectedRow() != -1) {
-                   botonesEliminarActualizar();
+                    botonesEliminarActualizar();
                     textoNuevo();
                     jtxtCedula.setEnabled(false);
                     int row = jtblDatos.getSelectedRow();
@@ -358,70 +339,48 @@ public class Estudiantes extends javax.swing.JInternalFrame {
         jtxtGenero.setEnabled(true);
     }
 
-    private void validarGenero() {
-        String texto = jtxtGenero.getText().trim().toLowerCase();
-        if (texto.isEmpty()) {
-            return;
-        }
-
-        if ("hombre".startsWith(texto)) {
-        } else if ("mujer".startsWith(texto)) {
-        } else {
-            JOptionPane.showMessageDialog(this, "Solo se permite 'Hombre' o 'Mujer'");
-            jtxtGenero.setText("");
-            return;
-        }
-        if (texto.length() > 6) {
-            JOptionPane.showMessageDialog(this, "Solo se permite 'Hombre' o 'Mujer'");
-            jtxtGenero.setText("");
-        }
-    }
+    
 
     public boolean validateData() {
-    boolean validate = true;
-    StringBuilder message = new StringBuilder("Datos incorrectos:\n");
+        boolean validate = true;
+        StringBuilder message = new StringBuilder("Datos incorrectos:\n");
 
-    String cedula = jtxtCedula.getText().trim();
-    String telefono = jtxtTelefono.getText().trim();
-    String genero = jtxtGenero.getText().trim();
-
-    // ======== VALIDAR CÉDULA ========
-    if (cedula.length() != 10) {
-        validate = false;
-        message.append("- Longitud de cédula inválida\n");
-    } else {
-        try {
-            int provincia = Integer.parseInt(cedula.substring(0, 2));
-            if (provincia < 1 || provincia > 24) {
-                validate = false;
-                message.append("- Los dos primeros dígitos de la cédula deben corresponder a una provincia (01–24)\n");
-            }
-        } catch (NumberFormatException e) {
+        String cedula = jtxtCedula.getText().trim();
+        String telefono = jtxtTelefono.getText().trim();
+        String genero = jtxtGenero.getText().trim();
+        //cedula
+        if (cedula.length() != 10) {
             validate = false;
-            message.append("- Cédula inválida (solo debe contener números)\n");
+            message.append("- Longitud de cédula inválida\n");
+        } else {
+            try {
+                int provincia = Integer.parseInt(cedula.substring(0, 2));
+                if (provincia < 1 || provincia > 24) {
+                    validate = false;
+                    message.append("- Los dos primeros dígitos de la cédula deben corresponder a una provincia (01–24)\n");
+                }
+            } catch (NumberFormatException e) {
+                validate = false;
+                message.append("- Cédula inválida (solo debe contener números)\n");
+            }
         }
+        //telefono
+        if (telefono.length() != 10) {
+            validate = false;
+            message.append("- Longitud de teléfono inválida\n");
+        }
+        //genero
+        if (!genero.equalsIgnoreCase("hombre") && !genero.equalsIgnoreCase("mujer")) {
+            validate = false;
+            message.append("- Género inválido (use 'Hombre' o 'Mujer')\n");
+        }
+
+        if (!validate) {
+            JOptionPane.showMessageDialog(this, message.toString(), "Error de validación", JOptionPane.ERROR_MESSAGE);
+        }
+
+        return validate;
     }
-
-    // ======== VALIDAR TELÉFONO ========
-    if (telefono.length() != 10) {
-        validate = false;
-        message.append("- Longitud de teléfono inválida\n");
-    }
-
-    // ======== VALIDAR GÉNERO ========
-    if (!genero.equalsIgnoreCase("hombre") && !genero.equalsIgnoreCase("mujer")) {
-        validate = false;
-        message.append("- Género inválido (use 'Hombre' o 'Mujer')\n");
-    }
-
-    // ======== MOSTRAR MENSAJE ========
-    if (!validate) {
-        JOptionPane.showMessageDialog(this, message.toString(), "Error de validación", JOptionPane.ERROR_MESSAGE);
-    }
-
-    return validate;
-}
-
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -680,7 +639,7 @@ public class Estudiantes extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jbtnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnGuardarActionPerformed
-        if(validateData()){
+        if (validateData()) {
             save();
         }
     }//GEN-LAST:event_jbtnGuardarActionPerformed
@@ -690,7 +649,7 @@ public class Estudiantes extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_JbtnEliminarActionPerformed
 
     private void jbtnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnEditarActionPerformed
-        if(validateData()){
+        if (validateData()) {
             updateStudent();
         }
     }//GEN-LAST:event_jbtnEditarActionPerformed
@@ -710,7 +669,9 @@ public class Estudiantes extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_jbtnCancelarActionPerformed
 
     private void jtxtGeneroKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtxtGeneroKeyTyped
-
+        if(!Character.isAlphabetic(evt.getKeyChar())){
+            evt.consume();
+        }
     }//GEN-LAST:event_jtxtGeneroKeyTyped
 
     private void jtxtGeneroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtxtGeneroActionPerformed

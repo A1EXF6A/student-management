@@ -26,8 +26,6 @@ public class Cursos extends javax.swing.JInternalFrame {
         this.setClosable(true);
         initLogic();
     }
-
-    // --- lógica similar a Estudiantes ---
     private java.sql.Connection cc;
     private Conexion con = new Conexion();
     private DefaultTableModel table;

@@ -27,7 +27,6 @@ public class Inscripcion extends javax.swing.JInternalFrame {
         initLogic();
     }
 
-    // lógica similar a Estudiantes
     private Conexion con = new Conexion();
     private DefaultTableModel table;
 
@@ -37,6 +36,7 @@ public class Inscripcion extends javax.swing.JInternalFrame {
         table.addColumn("CURSO");
         table.addColumn("CEDULA");
         table.addColumn("ESTUDIANTE");
+        table.addColumn("APELLIDO");
         start();
         loadEstudiantes();
         loadCursos();
@@ -107,7 +107,7 @@ public class Inscripcion extends javax.swing.JInternalFrame {
         try {
             table.setRowCount(0);
             Connection cc = con.conectar();
-            String sql = "SELECT c.nombre AS curso, e.est_cedula AS cedula, e.est_nombre AS nombre "
+            String sql = "SELECT c.nombre AS curso, e.est_cedula AS cedula, e.est_nombre AS nombre, e.est_apellido AS apellido "
                     + "FROM estudiante_curso ec "
                     + "JOIN estudiante e ON ec.est_cedula = e.est_cedula "
                     + "JOIN cursos c ON ec.cursoid = c.cursoid";
@@ -121,10 +121,11 @@ public class Inscripcion extends javax.swing.JInternalFrame {
             }
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                String[] row = new String[3];
+                String[] row = new String[4];
                 row[0] = rs.getString("curso");
                 row[1] = rs.getString("cedula");
                 row[2] = rs.getString("nombre");
+                row[3] = rs.getString("apellido");
                 table.addRow(row);
             }
         } catch (Exception ex) {
@@ -144,8 +145,6 @@ public class Inscripcion extends javax.swing.JInternalFrame {
                 JOptionPane.showMessageDialog(this, "Seleccione un estudiante válido");
                 return;
             }
-            // estItem was populated as "cedula-nombre-apellido" (no spaces).
-            // Extract cedula robustly: take substring before the first '-' if present.
             String ced;
             int dashPos = estItem.indexOf('-');
             if (dashPos > 0) {
@@ -153,7 +152,7 @@ public class Inscripcion extends javax.swing.JInternalFrame {
             } else {
                 ced = estItem.trim();
             }
-            // Basic validation: cedula length should be reasonable (avoid inserting huge strings)
+
             if (ced.length() == 0 || ced.length() > 50) {
                 JOptionPane.showMessageDialog(this, "Cédula de estudiante inválida: '" + ced + "'");
                 return;
@@ -169,7 +168,7 @@ public class Inscripcion extends javax.swing.JInternalFrame {
                 return;
             }
             int cursoid = qrs.getInt("cursoid");
-            // Verify that the estudiante exists (to avoid FK error)
+
             String checkEst = "SELECT est_cedula FROM estudiante WHERE est_cedula = ?";
             PreparedStatement psCheck = cc.prepareStatement(checkEst);
             psCheck.setString(1, ced);
@@ -179,7 +178,6 @@ public class Inscripcion extends javax.swing.JInternalFrame {
                 return;
             }
 
-            // Get column max size for est_cedula to avoid data truncation errors
             int maxSize = -1;
             try {
                 DatabaseMetaData md = cc.getMetaData();
@@ -191,7 +189,6 @@ public class Inscripcion extends javax.swing.JInternalFrame {
                     cols.close();
                 }
             } catch (Exception mm) {
-                // ignore metadata failures, we'll rely on basic validation
             }
             if (maxSize > 0 && ced.length() > maxSize) {
                 JOptionPane.showMessageDialog(this, "La cédula es demasiado larga (" + ced.length() + " > " + maxSize + ")");
