@@ -89,6 +89,7 @@ CREATE TABLE estudiante (
     est_apellido VARCHAR(100) NOT NULL,
     est_direccion VARCHAR(255) DEFAULT 'S/D',
     est_telefono VARCHAR(20) DEFAULT '00000',
+    est_genero VARCHAR(20) NOT NULL,
     PRIMARY KEY (est_cedula)
 );
 ```
