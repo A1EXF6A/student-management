@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="students_with_courses" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="12345678-1234-1234-1234-123456789027">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT e.est_cedula, e.est_nombre, e.est_apellido, e.est_direccion, e.est_telefono, GROUP_CONCAT(c.nombre SEPARATOR ', ') as cursos
+FROM estudiante e
+LEFT JOIN estudiante_curso ec ON e.est_cedula = ec.est_cedula
+LEFT JOIN cursos c ON ec.cursoid = c.cursoid
+GROUP BY e.est_cedula
+ORDER BY e.est_apellido, e.est_nombre]]>
+	</queryString>
+	<field name="est_cedula" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="est_nombre" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="est_apellido" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="est_direccion" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="est_telefono" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cursos" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="20" width="555" height="30" uuid="12345678-1234-1234-1234-123456789028"/>
+				<textElement textAlignment="Center">
+					<font size="20" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Estudiantes con Información Completa y Cursos]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="27" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="2" width="80" height="20" uuid="12345678-1234-1234-1234-123456789029"/>
+				<text><![CDATA[Cedula]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="85" y="2" width="80" height="20" uuid="12345678-1234-1234-1234-123456789030"/>
+				<text><![CDATA[Nombre]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="170" y="2" width="80" height="20" uuid="12345678-1234-1234-1234-123456789031"/>
+				<text><![CDATA[Apellido]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="255" y="2" width="80" height="20" uuid="12345678-1234-1234-1234-123456789032"/>
+				<text><![CDATA[Direccion]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="340" y="2" width="80" height="20" uuid="12345678-1234-1234-1234-123456789033"/>
+				<text><![CDATA[Telefono]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="425" y="2" width="130" height="20" uuid="12345678-1234-1234-1234-123456789034"/>
+				<text><![CDATA[Cursos]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="25" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="5" width="80" height="20" uuid="12345678-1234-1234-1234-123456789035"/>
+				<textFieldExpression><![CDATA[$F{est_cedula}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="85" y="5" width="80" height="20" uuid="12345678-1234-1234-1234-123456789036"/>
+				<textFieldExpression><![CDATA[$F{est_nombre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="170" y="5" width="80" height="20" uuid="12345678-1234-1234-1234-123456789037"/>
+				<textFieldExpression><![CDATA[$F{est_apellido}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="255" y="5" width="80" height="20" uuid="12345678-1234-1234-1234-123456789038"/>
+				<textFieldExpression><![CDATA[$F{est_direccion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="340" y="5" width="80" height="20" uuid="12345678-1234-1234-1234-123456789039"/>
+				<textFieldExpression><![CDATA[$F{est_telefono}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="425" y="5" width="130" height="20" uuid="12345678-1234-1234-1234-123456789040"/>
+				<textFieldExpression><![CDATA[$F{cursos}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch">
+			<textField>
+				<reportElement mode="Opaque" x="0" y="4" width="515" height="13" backcolor="#E6E6E6" uuid="12345678-1234-1234-1234-123456789041"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement mode="Opaque" x="515" y="4" width="40" height="13" backcolor="#E6E6E6" uuid="12345678-1234-1234-1234-123456789042"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement x="0" y="4" width="100" height="13" uuid="12345678-1234-1234-1234-123456789043"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>
