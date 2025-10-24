@@ -33,16 +33,16 @@ ORDER BY e.est_apellido, e.est_nombre]]>
 	<title>
 		<band height="72">
 			<frame>
-				<reportElement mode="Opaque" x="-30" y="-30" width="595" height="92" backcolor="#CCCCCC" uuid="b306d38a-f013-4f47-a882-0d788a1799a6"/>
+				<reportElement mode="Opaque" x="-30" y="-30" width="595" height="92" backcolor="#001F3F" uuid="b306d38a-f013-4f47-a882-0d788a1799a6"/>
 				<staticText>
-					<reportElement x="30" y="20" width="266" height="43" forecolor="#333333" uuid="816ce9a6-ccfc-4464-8855-7bac0b16c2d8"/>
+					<reportElement x="30" y="20" width="266" height="43" forecolor="#FFFFFF" uuid="816ce9a6-ccfc-4464-8855-7bac0b16c2d8"/>
 					<textElement>
 						<font size="34" isBold="true"/>
 					</textElement>
 					<text><![CDATA[ESTUDIANTES]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="395" y="43" width="180" height="20" forecolor="#333333" uuid="0a66d632-c5ae-4913-9575-ec59330d14f0"/>
+					<reportElement x="395" y="43" width="180" height="20" forecolor="#FFFFFF" uuid="0a66d632-c5ae-4913-9575-ec59330d14f0"/>
 					<textElement textAlignment="Right">
 						<font size="14" isBold="false"/>
 					</textElement>
@@ -54,7 +54,7 @@ ORDER BY e.est_apellido, e.est_nombre]]>
 	<columnHeader>
 		<band height="27" splitType="Stretch">
 			<staticText>
-				<reportElement mode="Opaque" x="0" y="2" width="100" height="20" forecolor="#333333" backcolor="#F0F0F0" uuid="12345678-1234-1234-1234-123456789014">
+				<reportElement mode="Opaque" x="0" y="2" width="100" height="20" forecolor="#FFFFFF" backcolor="#001F3F" uuid="12345678-1234-1234-1234-123456789014">
 
 				</reportElement>
 				<textElement textAlignment="Center">
@@ -63,7 +63,7 @@ ORDER BY e.est_apellido, e.est_nombre]]>
 				<text><![CDATA[Cedula]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="105" y="2" width="100" height="20" forecolor="#333333" backcolor="#F0F0F0" uuid="12345678-1234-1234-1234-123456789015">
+				<reportElement mode="Opaque" x="105" y="2" width="100" height="20" forecolor="#FFFFFF" backcolor="#001F3F" uuid="12345678-1234-1234-1234-123456789015">
 
 				</reportElement>
 				<textElement textAlignment="Center">
@@ -72,7 +72,7 @@ ORDER BY e.est_apellido, e.est_nombre]]>
 				<text><![CDATA[Nombre]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="210" y="2" width="100" height="20" forecolor="#333333" backcolor="#F0F0F0" uuid="12345678-1234-1234-1234-123456789016">
+				<reportElement mode="Opaque" x="210" y="2" width="100" height="20" forecolor="#FFFFFF" backcolor="#001F3F" uuid="12345678-1234-1234-1234-123456789016">
 
 				</reportElement>
 				<textElement textAlignment="Center">
@@ -81,7 +81,7 @@ ORDER BY e.est_apellido, e.est_nombre]]>
 				<text><![CDATA[Apellido]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="315" y="2" width="100" height="20" forecolor="#333333" backcolor="#F0F0F0" uuid="12345678-1234-1234-1234-123456789017">
+				<reportElement mode="Opaque" x="315" y="2" width="100" height="20" forecolor="#FFFFFF" backcolor="#001F3F" uuid="12345678-1234-1234-1234-123456789017">
 
 				</reportElement>
 				<textElement textAlignment="Center">
@@ -90,7 +90,7 @@ ORDER BY e.est_apellido, e.est_nombre]]>
 				<text><![CDATA[Direccion]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="420" y="2" width="100" height="20" forecolor="#333333" backcolor="#F0F0F0" uuid="12345678-1234-1234-1234-123456789018">
+				<reportElement mode="Opaque" x="420" y="2" width="100" height="20" forecolor="#FFFFFF" backcolor="#001F3F" uuid="12345678-1234-1234-1234-123456789018">
 
 				</reportElement>
 				<textElement textAlignment="Center">
