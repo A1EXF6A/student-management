@@ -28,6 +28,7 @@ public class CursoNombre extends javax.swing.JInternalFrame {
      * Creates new form CursoNombre
      */
     private String route;
+
     public CursoNombre(String route) {
         initComponents();
         this.setClosable(true);
@@ -111,22 +112,45 @@ public class CursoNombre extends javax.swing.JInternalFrame {
     private void jbtnReporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnReporteActionPerformed
         try {
             Conexion con = new Conexion();
-            Connection cc = (Connection) con.conectar();
-            Map parameters = new HashMap();
+            Connection cc = con.conectar();
+
+            // Parámetros del reporte
+            Map<String, Object> parameters = new HashMap<>();
             parameters.put("course_name", jtxtReporte.getText());
+
+            // Compilar y llenar el reporte
             JasperReport reporte = JasperCompileManager.compileReport(route);
-            JasperPrint imprimir;
-            imprimir = JasperFillManager.fillReport(reporte, parameters, cc);
-            JasperViewer.viewReport(imprimir, false);
+            JasperPrint imprimir = JasperFillManager.fillReport(reporte, parameters, cc);
+
+            // Crear el visor interno
+            net.sf.jasperreports.swing.JRViewer visor = new net.sf.jasperreports.swing.JRViewer(imprimir);
+
+            // Crear un JInternalFrame para mostrar el reporte dentro del desktop pane
+            javax.swing.JInternalFrame frameReporte = new javax.swing.JInternalFrame(
+                    "Reporte - " + jtxtReporte.getText(),
+                    true, // closable
+                    true, // resizable
+                    true, // maximizable
+                    true // iconifiable
+            );
+
+            frameReporte.setSize(800, 600);
+            frameReporte.setVisible(true);
+            frameReporte.setContentPane(visor);
+
+            // Agregar el frame al DesktopPane principal
+            Principal.openInternalFrame(frameReporte);
+
         } catch (JRException ex) {
-            JOptionPane.showMessageDialog(this, ex);
+            JOptionPane.showMessageDialog(this, "Error al generar el reporte:\n" + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (SQLException ex) {
             Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, "Error en la conexión con la base de datos", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_jbtnReporteActionPerformed
 
     private void jtxtReporteKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtxtReporteKeyTyped
-        if(!Character.isAlphabetic(evt.getKeyChar())){
+        if (!Character.isAlphabetic(evt.getKeyChar())) {
             evt.consume();
         }
     }//GEN-LAST:event_jtxtReporteKeyTyped

@@ -6,6 +6,7 @@ package cuartouta;
 
 //import reportes.ReporteEstudiantes;
 //import reportes.VisorPDF;
+import java.awt.Color;
 import java.sql.Connection;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
@@ -19,64 +20,66 @@ import net.sf.jasperreports.engine.*;
 
 import net.sf.jasperreports.view.JasperViewer;
 
-
 /**
  *
  * @author DELL
  */
 public class Principal extends javax.swing.JFrame {
+
     private String rol;
     // instancia actual para acceder al JDesktopPane desde clases estáticas (VisorPDF)
     private static Principal currentInstance;
+
     /**
      * Creates new form Principal
      */
     public Principal(String rol) {
         initComponents();
         this.setExtendedState(this.MAXIMIZED_BOTH);
+        jdskPrincipal.setBackground(Color.decode("#001F3F"));
+
         this.rol = rol;
         currentInstance = this;
         configurarAtajos();
- 
+
     }
-    
+
     private void configurarAtajos() {
-    // Ctrl + E → Reporte Estudiantes
-    jmniEstudiantesCurso.setAccelerator(KeyStroke.getKeyStroke(
-        KeyEvent.VK_Q, InputEvent.CTRL_DOWN_MASK
-    ));
+        // Ctrl + E → Reporte Estudiantes
+        jmniEstudiantesCurso.setAccelerator(KeyStroke.getKeyStroke(
+                KeyEvent.VK_Q, InputEvent.CTRL_DOWN_MASK
+        ));
 
-    // Ctrl + C → Reporte Cursos
-    jmniEstudiantes.setAccelerator(KeyStroke.getKeyStroke(
-        KeyEvent.VK_W, InputEvent.CTRL_DOWN_MASK
-    ));
+        // Ctrl + C → Reporte Cursos
+        jmniEstudiantes.setAccelerator(KeyStroke.getKeyStroke(
+                KeyEvent.VK_W, InputEvent.CTRL_DOWN_MASK
+        ));
 
-    // Ctrl + I → Reporte Inscripciones
-    jmniDistribucionGenero.setAccelerator(KeyStroke.getKeyStroke(
-        KeyEvent.VK_E, InputEvent.CTRL_DOWN_MASK
-    ));
+        // Ctrl + I → Reporte Inscripciones
+        jmniDistribucionGenero.setAccelerator(KeyStroke.getKeyStroke(
+                KeyEvent.VK_E, InputEvent.CTRL_DOWN_MASK
+        ));
 
-    // Ctrl + 1 → Ventana Estudiantes
-    jMenuItem1.setAccelerator(KeyStroke.getKeyStroke(
-        KeyEvent.VK_A, InputEvent.CTRL_DOWN_MASK
-    ));
+        // Ctrl + 1 → Ventana Estudiantes
+        jMenuItem1.setAccelerator(KeyStroke.getKeyStroke(
+                KeyEvent.VK_A, InputEvent.CTRL_DOWN_MASK
+        ));
 
-    // Ctrl + 2 → Ventana Cursos
-    jMenuItem3.setAccelerator(KeyStroke.getKeyStroke(
-        KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK
-    ));
-    
-    // Ctrl + 2 → Ventana Inscripciones
-    jMenuItem4.setAccelerator(KeyStroke.getKeyStroke(
-        KeyEvent.VK_D, InputEvent.CTRL_DOWN_MASK
-    ));
+        // Ctrl + 2 → Ventana Cursos
+        jMenuItem3.setAccelerator(KeyStroke.getKeyStroke(
+                KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK
+        ));
 
-    // Ctrl + Q → Salir
-    jMenuItem2.setAccelerator(KeyStroke.getKeyStroke(
-        KeyEvent.VK_X, InputEvent.CTRL_DOWN_MASK
-    ));
-}
+        // Ctrl + 2 → Ventana Inscripciones
+        jMenuItem4.setAccelerator(KeyStroke.getKeyStroke(
+                KeyEvent.VK_D, InputEvent.CTRL_DOWN_MASK
+        ));
 
+        // Ctrl + Q → Salir
+        jMenuItem2.setAccelerator(KeyStroke.getKeyStroke(
+                KeyEvent.VK_X, InputEvent.CTRL_DOWN_MASK
+        ));
+    }
 
     public static javax.swing.JDesktopPane getDesktopPane() {
         return currentInstance == null ? null : currentInstance.jdskPrincipal;
@@ -84,8 +87,8 @@ public class Principal extends javax.swing.JFrame {
 
     /**
      * Add a JInternalFrame to the desktop and position it so it does not
-     * overlap any existing internal frames. It will try a grid of positions
-     * and fall back to a simple cascade if none free is found.
+     * overlap any existing internal frames. It will try a grid of positions and
+     * fall back to a simple cascade if none free is found.
      */
     private void addInternalFrameNoOverlap(javax.swing.JInternalFrame frame) {
         javax.swing.JDesktopPane desktop = this.jdskPrincipal;
@@ -111,7 +114,9 @@ public class Principal extends javax.swing.JFrame {
                 Rectangle candidate = new Rectangle(x, y, frame.getWidth(), frame.getHeight());
                 boolean intersects = false;
                 for (javax.swing.JInternalFrame f : desktop.getAllFrames()) {
-                    if (f == frame) continue;
+                    if (f == frame) {
+                        continue;
+                    }
                     if (f.getBounds().intersects(candidate)) {
                         intersects = true;
                         break;
@@ -123,7 +128,9 @@ public class Principal extends javax.swing.JFrame {
                     break;
                 }
             }
-            if (placed) break;
+            if (placed) {
+                break;
+            }
         }
 
         if (!placed) {
@@ -151,11 +158,10 @@ public class Principal extends javax.swing.JFrame {
             frame.setVisible(true);
         }
     }
-    
-    private boolean isAdmin() {
-    return rol != null && rol.equalsIgnoreCase("administrador");
-}
 
+    private boolean isAdmin() {
+        return rol != null && rol.equalsIgnoreCase("administrador");
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -284,79 +290,99 @@ public class Principal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        if(isAdmin()){
+        if (isAdmin()) {
             Estudiantes a = new Estudiantes();
             addInternalFrameNoOverlap(a);
-        }else{
+        } else {
             JOptionPane.showMessageDialog(this, "No tiene permisos");
         }
-        
+
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
-        int confirm = JOptionPane.showConfirmDialog(this, "DESEA SALIR","Confirmar",JOptionPane.YES_NO_OPTION);
-        if(confirm==JOptionPane.YES_OPTION){
+        int confirm = JOptionPane.showConfirmDialog(this, "DESEA SALIR", "Confirmar", JOptionPane.YES_NO_OPTION);
+        if (confirm == JOptionPane.YES_OPTION) {
             new Login().setVisible(true);
             this.dispose();
         }
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
-        if(isAdmin()){
+        if (isAdmin()) {
             Inscripcion b = new Inscripcion();
             addInternalFrameNoOverlap(b);
-        }else{
+        } else {
             JOptionPane.showMessageDialog(this, "No tiene permisos");
         }
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
-        if(isAdmin()){
+        if (isAdmin()) {
             Cursos c = new Cursos();
             addInternalFrameNoOverlap(c);
-        }else{
+        } else {
             JOptionPane.showMessageDialog(this, "No tiene permisos");
         }
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     private void jmniEstudiantesCursoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmniEstudiantesCursoActionPerformed
-       try{
-           CursoNombre a = new CursoNombre("src\\reportesGestion\\students_by_course.jrxml");
-           addInternalFrameNoOverlap(a);
-       }catch(Exception e){
-           JOptionPane.showMessageDialog(this, "ERROR INTERNO DEL SERVIDOR");
-       }
-       
+        try {
+            CursoNombre a = new CursoNombre("src\\reportesGestion\\students_by_course.jrxml");
+            addInternalFrameNoOverlap(a);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "ERROR INTERNO DEL SERVIDOR");
+        }
+
     }//GEN-LAST:event_jmniEstudiantesCursoActionPerformed
 
     private void jmniEstudiantesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmniEstudiantesActionPerformed
         try {
             Conexion con = new Conexion();
-            Connection cc = (Connection) con.conectar();
+            Connection cc = con.conectar();
+
+            // Compilar y llenar el reporte
             JasperReport reporte = JasperCompileManager.compileReport("src\\reportesGestion\\students_with_courses.jrxml");
-            JasperPrint imprimir;
-            imprimir = JasperFillManager.fillReport(reporte, null, cc);
-            JasperViewer.viewReport(imprimir,false);
+            JasperPrint imprimir = JasperFillManager.fillReport(reporte, null, cc);
+
+            // Crear visor interno (JRViewer)
+            net.sf.jasperreports.swing.JRViewer visor = new net.sf.jasperreports.swing.JRViewer(imprimir);
+
+            // Crear un JInternalFrame para mostrar el reporte dentro del desktop pane
+            javax.swing.JInternalFrame frameReporte = new javax.swing.JInternalFrame(
+                    "Reporte de Estudiantes",
+                    true, // closable
+                    true, // resizable
+                    true, // maximizable
+                    true // iconifiable
+            );
+
+            frameReporte.setSize(800, 600);
+            frameReporte.setVisible(true);
+            frameReporte.setContentPane(visor);
+
+            // Agregar el frame al DesktopPane principal
+            Principal.openInternalFrame(frameReporte);
+
         } catch (JRException ex) {
-            JOptionPane.showMessageDialog(this, ex);
+            JOptionPane.showMessageDialog(this, "Error al generar el reporte:\n" + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (SQLException ex) {
             Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, "Error de conexión con la base de datos", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_jmniEstudiantesActionPerformed
 
     private void jmniDistribucionGeneroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmniDistribucionGeneroActionPerformed
-        try{
-           CursoNombre a = new CursoNombre("src\\reportesGestion\\course_students_chart.jrxml");
-           addInternalFrameNoOverlap(a);
-       }catch(Exception e){
-           JOptionPane.showMessageDialog(this, "ERROR INTERNO DEL SERVIDOR");
-       }
+        try {
+            CursoNombre a = new CursoNombre("src\\reportesGestion\\course_students_chart.jrxml");
+            addInternalFrameNoOverlap(a);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "ERROR INTERNO DEL SERVIDOR");
+        }
     }//GEN-LAST:event_jmniDistribucionGeneroActionPerformed
 
     /**
      * @param args the command line arguments
      */
-    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu jMenu2;
