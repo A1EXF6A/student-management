@@ -124,6 +124,10 @@ public class CursoNombre extends javax.swing.JInternalFrame {
             // Compilar y llenar el reporte
             JasperReport reporte = JasperCompileManager.compileReport(route);
             JasperPrint imprimir = JasperFillManager.fillReport(reporte, parameters, cc);
+if (imprimir.getPages().isEmpty()) {
+    JOptionPane.showMessageDialog(this, "No hay datos para mostrar en el reporte.", "Reporte vacío", JOptionPane.INFORMATION_MESSAGE);
+    return; // 🔹 Salir sin crear el frame
+}
 
             // Crear el visor interno
             net.sf.jasperreports.swing.JRViewer visor = new net.sf.jasperreports.swing.JRViewer(imprimir);

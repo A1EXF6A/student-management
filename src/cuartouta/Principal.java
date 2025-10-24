@@ -41,6 +41,29 @@ public class Principal extends javax.swing.JFrame {
         this.rol = rol;
         currentInstance = this;
         configurarAtajos();
+        
+        // Atajo global: Ctrl + F4 o Esc para cerrar el internal frame activo
+jdskPrincipal.getInputMap(javax.swing.JComponent.WHEN_IN_FOCUSED_WINDOW)
+    .put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_DOWN_MASK), "cerrarInternal");
+
+jdskPrincipal.getInputMap(javax.swing.JComponent.WHEN_IN_FOCUSED_WINDOW)
+    .put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "cerrarInternal");
+
+jdskPrincipal.getActionMap().put("cerrarInternal", new javax.swing.AbstractAction() {
+    @Override
+    public void actionPerformed(java.awt.event.ActionEvent e) {
+        javax.swing.JInternalFrame frameActivo = jdskPrincipal.getSelectedFrame();
+        if (frameActivo != null) {
+            try {
+                frameActivo.setClosed(true); // cierra correctamente el frame
+            } catch (java.beans.PropertyVetoException ex) {
+                // si el frame no permite ser cerrado
+                System.out.println("No se pudo cerrar el frame: " + ex.getMessage());
+            }
+        }
+    }
+});
+
 
     }
 
@@ -343,6 +366,10 @@ public class Principal extends javax.swing.JFrame {
             // Compilar y llenar el reporte
             JasperReport reporte = JasperCompileManager.compileReport("src\\reportesGestion\\students_with_courses.jrxml");
             JasperPrint imprimir = JasperFillManager.fillReport(reporte, null, cc);
+if (imprimir.getPages().isEmpty()) {
+    JOptionPane.showMessageDialog(this, "No hay datos para mostrar en el reporte.", "Reporte vacío", JOptionPane.INFORMATION_MESSAGE);
+    return; // 🔹 Salir sin crear el frame
+}
 
             // Crear visor interno (JRViewer)
             net.sf.jasperreports.swing.JRViewer visor = new net.sf.jasperreports.swing.JRViewer(imprimir);

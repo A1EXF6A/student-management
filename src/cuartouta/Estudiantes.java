@@ -37,7 +37,7 @@ public class Estudiantes extends javax.swing.JInternalFrame {
         jPanel1.setBackground(color);
         jPanel3.setBackground(color);
         jPanel2.setBackground(color);*/
-        
+
         String titles[] = {"CEDULA", "NOMBRE"};
         table = new DefaultTableModel();
         this.jtblDatos.setModel(table);
@@ -66,6 +66,23 @@ public class Estudiantes extends javax.swing.JInternalFrame {
                 getData(jtxtBuscarEstudiante.getText().trim());
             }
         });
+        jtxtGenero.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                validarGenero();
+            }
+
+            @Override
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                char c = evt.getKeyChar();
+                // Solo letras y espacios permitidos
+                if (!Character.isLetter(c) && c != ' ') {
+                    evt.consume();
+                }
+            }
+        });
+        
+
         jtxtCedula.addKeyListener(new java.awt.event.KeyAdapter() {
             @Override
             public void keyTyped(java.awt.event.KeyEvent evt) {
@@ -143,7 +160,7 @@ public class Estudiantes extends javax.swing.JInternalFrame {
             } else if (jtxtApellido.getText().trim().isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Es obligatorio el apellido");
                 jtxtApellido.requestFocus();
-            } else if(jtxtGenero.getText().trim().isEmpty()){
+            } else if (jtxtGenero.getText().trim().isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Es obligatorio el genero");
                 jtxtGenero.requestFocus();
             } else {
@@ -258,7 +275,7 @@ public class Estudiantes extends javax.swing.JInternalFrame {
                     + "est_apellido = '" + jtxtApellido.getText() + "', "
                     + "est_direccion = '" + jtxtDireccion.getText() + "', "
                     + "est_telefono = '" + jtxtTelefono.getText() + "', "
-                    +"est_genero = '" + jtxtGenero.getText()+"'"
+                    + "est_genero = '" + jtxtGenero.getText() + "'"
                     + "WHERE est_cedula = '" + jtxtCedula.getText() + "'";
 
             PreparedStatement psd = cc.prepareStatement(sql);
@@ -280,8 +297,9 @@ public class Estudiantes extends javax.swing.JInternalFrame {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 if (jtblDatos.getSelectedRow() != -1) {
-                    botonesEliminarActualizar();
+                   botonesEliminarActualizar();
                     textoNuevo();
+                    jtxtCedula.setEnabled(false);
                     int row = jtblDatos.getSelectedRow();
                     jtxtCedula.setText(jtblDatos.getValueAt(row, 0).toString());
                     jtxtNombre.setText(jtblDatos.getValueAt(row, 1).toString());
@@ -289,7 +307,7 @@ public class Estudiantes extends javax.swing.JInternalFrame {
                     jtxtDireccion.setText(jtblDatos.getValueAt(row, 3).toString());
                     jtxtTelefono.setText(jtblDatos.getValueAt(row, 4).toString());
                     jtxtGenero.setText(jtblDatos.getValueAt(row, 5).toString());
-                    
+
                 }
             }
         });
@@ -339,6 +357,71 @@ public class Estudiantes extends javax.swing.JInternalFrame {
         jtxtTelefono.setEnabled(true);
         jtxtGenero.setEnabled(true);
     }
+
+    private void validarGenero() {
+        String texto = jtxtGenero.getText().trim().toLowerCase();
+        if (texto.isEmpty()) {
+            return;
+        }
+
+        if ("hombre".startsWith(texto)) {
+        } else if ("mujer".startsWith(texto)) {
+        } else {
+            JOptionPane.showMessageDialog(this, "Solo se permite 'Hombre' o 'Mujer'");
+            jtxtGenero.setText("");
+            return;
+        }
+        if (texto.length() > 6) {
+            JOptionPane.showMessageDialog(this, "Solo se permite 'Hombre' o 'Mujer'");
+            jtxtGenero.setText("");
+        }
+    }
+
+    public boolean validateData() {
+    boolean validate = true;
+    StringBuilder message = new StringBuilder("Datos incorrectos:\n");
+
+    String cedula = jtxtCedula.getText().trim();
+    String telefono = jtxtTelefono.getText().trim();
+    String genero = jtxtGenero.getText().trim();
+
+    // ======== VALIDAR CÉDULA ========
+    if (cedula.length() != 10) {
+        validate = false;
+        message.append("- Longitud de cédula inválida\n");
+    } else {
+        try {
+            int provincia = Integer.parseInt(cedula.substring(0, 2));
+            if (provincia < 1 || provincia > 24) {
+                validate = false;
+                message.append("- Los dos primeros dígitos de la cédula deben corresponder a una provincia (01–24)\n");
+            }
+        } catch (NumberFormatException e) {
+            validate = false;
+            message.append("- Cédula inválida (solo debe contener números)\n");
+        }
+    }
+
+    // ======== VALIDAR TELÉFONO ========
+    if (telefono.length() != 10) {
+        validate = false;
+        message.append("- Longitud de teléfono inválida\n");
+    }
+
+    // ======== VALIDAR GÉNERO ========
+    if (!genero.equalsIgnoreCase("hombre") && !genero.equalsIgnoreCase("mujer")) {
+        validate = false;
+        message.append("- Género inválido (use 'Hombre' o 'Mujer')\n");
+    }
+
+    // ======== MOSTRAR MENSAJE ========
+    if (!validate) {
+        JOptionPane.showMessageDialog(this, message.toString(), "Error de validación", JOptionPane.ERROR_MESSAGE);
+    }
+
+    return validate;
+}
+
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -597,7 +680,9 @@ public class Estudiantes extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jbtnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnGuardarActionPerformed
-        save();
+        if(validateData()){
+            save();
+        }
     }//GEN-LAST:event_jbtnGuardarActionPerformed
 
     private void JbtnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JbtnEliminarActionPerformed
@@ -605,7 +690,9 @@ public class Estudiantes extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_JbtnEliminarActionPerformed
 
     private void jbtnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnEditarActionPerformed
-        updateStudent();
+        if(validateData()){
+            updateStudent();
+        }
     }//GEN-LAST:event_jbtnEditarActionPerformed
 
     private void jbtnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnNuevoActionPerformed
@@ -623,25 +710,7 @@ public class Estudiantes extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_jbtnCancelarActionPerformed
 
     private void jtxtGeneroKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtxtGeneroKeyTyped
-        String texto = jtxtGenero.getText().trim().toLowerCase();
 
-        if (texto.startsWith("h")) {
-            if (!"hombre".startsWith(texto)) {
-                jtxtGenero.setText("hombre".substring(0, texto.length() - 1));
-            }
-        } else if (texto.startsWith("m")) {
-            if (!"mujer".startsWith(texto)) {
-                jtxtGenero.setText("mujer".substring(0, texto.length() - 1));
-            }
-        } else if (!texto.isEmpty()) {
-            jtxtGenero.setText("");
-        }
-
-        // Si el texto completo es incorrecto
-        if (!texto.equals("hombre") && !texto.equals("mujer") && texto.length() >= 5) {
-            JOptionPane.showMessageDialog(null, "Solo se permite 'Hombre' o 'Mujer'.");
-            jtxtGenero.setText("");
-        }
     }//GEN-LAST:event_jtxtGeneroKeyTyped
 
     private void jtxtGeneroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtxtGeneroActionPerformed
