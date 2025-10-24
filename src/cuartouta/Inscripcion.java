@@ -4,6 +4,7 @@
  */
 package cuartouta;
 
+import java.awt.Color;
 import java.sql.*;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -21,6 +22,8 @@ public class Inscripcion extends javax.swing.JInternalFrame {
         initComponents();
         // permitir cerrar la ventana interna con el botón X
         this.setClosable(true);
+        /*Color color = Color.decode("#FFFFFF");
+        jPanel1.setBackground(color); */
         initLogic();
     }
 

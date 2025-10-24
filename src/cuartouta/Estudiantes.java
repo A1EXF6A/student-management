@@ -5,6 +5,7 @@
 package cuartouta;
 
 //import com.sun.jdi.connect.spi.Connection;
+import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.sql.*;
 import java.util.logging.Level;
@@ -32,6 +33,11 @@ public class Estudiantes extends javax.swing.JInternalFrame {
         initComponents();
         // permitir cerrar la ventana interna con el botón X
         this.setClosable(true);
+        /*Color color = Color.decode("#FFFFFF");
+        jPanel1.setBackground(color);
+        jPanel3.setBackground(color);
+        jPanel2.setBackground(color);*/
+        
         String titles[] = {"CEDULA", "NOMBRE"};
         table = new DefaultTableModel();
         this.jtblDatos.setModel(table);

@@ -4,6 +4,7 @@
  */
 package cuartouta;
 
+import java.awt.Color;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -33,6 +34,8 @@ public class CursoNombre extends javax.swing.JInternalFrame {
         initComponents();
         this.setClosable(true);
         this.route = route;
+        /*Color color = Color.decode("#FFFFFF");
+        jPanel1.setBackground(color);*/
     }
 
     /**

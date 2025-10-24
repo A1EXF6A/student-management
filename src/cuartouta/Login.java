@@ -4,6 +4,7 @@
  */
 package cuartouta;
 
+import java.awt.Color;
 import java.awt.Image;
 import java.sql.*;
 import javax.swing.ImageIcon;
@@ -23,6 +24,10 @@ public class Login extends javax.swing.JFrame {
     public Login() {
         initComponents();
         this.setLocationRelativeTo(null);
+        Color color = Color.decode("#003366");
+        jPanel1.setBackground(color);
+        jLabel1.setForeground(Color.WHITE);
+        jLabel2.setForeground(Color.WHITE);
         setIconLabel(jlblUser, "/icons/user.png");
 
     }
@@ -42,7 +47,7 @@ public class Login extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "Login exitoso. ¡Bienvenido " + username + "!");
                 Principal ventanaPrincipal = new Principal(rol);
                 ventanaPrincipal.setVisible(true);
-            this.dispose();
+                this.dispose();
             } else {
                 JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos.");
             }
@@ -57,34 +62,35 @@ public class Login extends javax.swing.JFrame {
     public String getPassword() {
         return new String(jpswPassword.getPassword());
     }
-    
+
     /**
- * Establece un icono en un JLabel.
- * @param label JLabel donde se mostrará el icono.
- * @param rutaIcono Ruta dentro de src de la imagen (por ejemplo "/iconos/user.png").
- */
-private void setIconLabel(javax.swing.JLabel label, String rutaIcono) {
-    try {
-        // Cargar imagen desde recursos
-        ImageIcon icon = new ImageIcon(getClass().getResource(rutaIcono));
-        
-        // Redimensionar al tamaño del JLabel
-        Image img = icon.getImage().getScaledInstance(
-            label.getWidth(), 
-            label.getHeight(), 
-            java.awt.Image.SCALE_SMOOTH
-        );
-        label.setIcon(new ImageIcon(img));
+     * Establece un icono en un JLabel.
+     *
+     * @param label JLabel donde se mostrará el icono.
+     * @param rutaIcono Ruta dentro de src de la imagen (por ejemplo
+     * "/iconos/user.png").
+     */
+    private void setIconLabel(javax.swing.JLabel label, String rutaIcono) {
+        try {
+            // Cargar imagen desde recursos
+            ImageIcon icon = new ImageIcon(getClass().getResource(rutaIcono));
 
-        // Centrar el icono dentro del JLabel
-        label.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        label.setVerticalAlignment(javax.swing.SwingConstants.CENTER);
+            // Redimensionar al tamaño del JLabel
+            Image img = icon.getImage().getScaledInstance(
+                    label.getWidth(),
+                    label.getHeight(),
+                    java.awt.Image.SCALE_SMOOTH
+            );
+            label.setIcon(new ImageIcon(img));
 
-    } catch (Exception e) {
-        System.err.println("Error al cargar icono: " + e.getMessage());
+            // Centrar el icono dentro del JLabel
+            label.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+            label.setVerticalAlignment(javax.swing.SwingConstants.CENTER);
+
+        } catch (Exception e) {
+            System.err.println("Error al cargar icono: " + e.getMessage());
+        }
     }
-}
-
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
