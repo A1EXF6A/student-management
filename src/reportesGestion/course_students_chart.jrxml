@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
- <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="course_students_chart" language="groovy" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="30" bottomMargin="30" uuid="abcdef12-3456-7890-abcd-ef1234567890">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="course_students_chart" language="groovy" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="30" bottomMargin="30" uuid="abcdef12-3456-7890-abcd-ef1234567890">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -24,11 +24,12 @@ GROUP BY est_genero]]>
 	<title>
 		<band height="79" splitType="Stretch">
 			<textField>
-				<reportElement x="0" y="20" width="535" height="30" forecolor="#333333" uuid="fd0eced1-c263-443b-a2c7-4ebda0899ec3"/>
+				<reportElement x="0" y="8" width="535" height="57" forecolor="#333333" uuid="fd0eced1-c263-443b-a2c7-4ebda0899ec3"/>
 				<textElement textAlignment="Center" markup="none">
 					<font size="20" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Gráfico de Estudiantes por Género en el Curso: " +$P{course_name}.toUpperCase()]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Gráfico de Estudiantes por Género en el Curso: " 
++$P{course_name}.toUpperCase()]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
