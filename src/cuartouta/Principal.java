@@ -42,17 +42,17 @@ public class Principal extends javax.swing.JFrame {
     
     private void configurarAtajos() {
     // Ctrl + E → Reporte Estudiantes
-    jmniEstudiantes.setAccelerator(KeyStroke.getKeyStroke(
+    jmniEstudiantesCurso.setAccelerator(KeyStroke.getKeyStroke(
         KeyEvent.VK_Q, InputEvent.CTRL_DOWN_MASK
     ));
 
     // Ctrl + C → Reporte Cursos
-    jmniCursos.setAccelerator(KeyStroke.getKeyStroke(
+    jmniEstudiantes.setAccelerator(KeyStroke.getKeyStroke(
         KeyEvent.VK_W, InputEvent.CTRL_DOWN_MASK
     ));
 
     // Ctrl + I → Reporte Inscripciones
-    jmniInscripciones.setAccelerator(KeyStroke.getKeyStroke(
+    jmniDistribucionGenero.setAccelerator(KeyStroke.getKeyStroke(
         KeyEvent.VK_E, InputEvent.CTRL_DOWN_MASK
     ));
 
@@ -173,9 +173,9 @@ public class Principal extends javax.swing.JFrame {
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenuItem4 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
+        jmniEstudiantesCurso = new javax.swing.JMenuItem();
         jmniEstudiantes = new javax.swing.JMenuItem();
-        jmniCursos = new javax.swing.JMenuItem();
-        jmniInscripciones = new javax.swing.JMenuItem();
+        jmniDistribucionGenero = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
         jMenuItem2 = new javax.swing.JMenuItem();
 
@@ -225,7 +225,16 @@ public class Principal extends javax.swing.JFrame {
 
         jMenu2.setText("Reportes");
 
-        jmniEstudiantes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/guys.png"))); // NOI18N
+        jmniEstudiantesCurso.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/guys.png"))); // NOI18N
+        jmniEstudiantesCurso.setText("Estudiantes por curso");
+        jmniEstudiantesCurso.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmniEstudiantesCursoActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jmniEstudiantesCurso);
+
+        jmniEstudiantes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/courses.png"))); // NOI18N
         jmniEstudiantes.setText("Estudiantes");
         jmniEstudiantes.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -234,23 +243,14 @@ public class Principal extends javax.swing.JFrame {
         });
         jMenu2.add(jmniEstudiantes);
 
-        jmniCursos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/courses.png"))); // NOI18N
-        jmniCursos.setText("Cursos");
-        jmniCursos.addActionListener(new java.awt.event.ActionListener() {
+        jmniDistribucionGenero.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/list.png"))); // NOI18N
+        jmniDistribucionGenero.setText("Genero por curso");
+        jmniDistribucionGenero.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jmniCursosActionPerformed(evt);
+                jmniDistribucionGeneroActionPerformed(evt);
             }
         });
-        jMenu2.add(jmniCursos);
-
-        jmniInscripciones.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/list.png"))); // NOI18N
-        jmniInscripciones.setText("Inscripciones");
-        jmniInscripciones.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jmniInscripcionesActionPerformed(evt);
-            }
-        });
-        jMenu2.add(jmniInscripciones);
+        jMenu2.add(jmniDistribucionGenero);
 
         jMenuBar1.add(jMenu2);
 
@@ -319,51 +319,39 @@ public class Principal extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
+    private void jmniEstudiantesCursoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmniEstudiantesCursoActionPerformed
+       try{
+           CursoNombre a = new CursoNombre("src\\reportesGestion\\students_by_course.jrxml");
+           addInternalFrameNoOverlap(a);
+       }catch(Exception e){
+           JOptionPane.showMessageDialog(this, "ERROR INTERNO DEL SERVIDOR");
+       }
+       
+    }//GEN-LAST:event_jmniEstudiantesCursoActionPerformed
+
     private void jmniEstudiantesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmniEstudiantesActionPerformed
-       /*try {
-                 Conexion con = new Conexion();
+        try {
+            Conexion con = new Conexion();
             Connection cc = (Connection) con.conectar();
-            JasperReport reporte = JasperCompileManager.compileReport("src\\reportes\\estudiantes.jrxml");
+            JasperReport reporte = JasperCompileManager.compileReport("src\\reportesGestion\\students_with_courses.jrxml");
             JasperPrint imprimir;
-           imprimir = JasperFillManager.fillReport(reporte, null, cc);
+            imprimir = JasperFillManager.fillReport(reporte, null, cc);
             JasperViewer.viewReport(imprimir,false);
         } catch (JRException ex) {
             JOptionPane.showMessageDialog(this, ex);
         } catch (SQLException ex) {
             Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
-       
+        }
     }//GEN-LAST:event_jmniEstudiantesActionPerformed
 
-    private void jmniCursosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmniCursosActionPerformed
-        try {
-                 Conexion con = new Conexion();
-            Connection cc = (Connection) con.conectar();
-            JasperReport reporte = JasperCompileManager.compileReport("src\\reportes\\cursos.jrxml");
-            JasperPrint imprimir;
-           imprimir = JasperFillManager.fillReport(reporte, null, cc);
-            JasperViewer.viewReport(imprimir,false);
-        } catch (JRException ex) {
-            JOptionPane.showMessageDialog(this, ex);
-        } catch (SQLException ex) {
-            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_jmniCursosActionPerformed
-
-    private void jmniInscripcionesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmniInscripcionesActionPerformed
-        try {
-                 Conexion con = new Conexion();
-            Connection cc = (Connection) con.conectar();
-            JasperReport reporte = JasperCompileManager.compileReport("src\\reportes\\inscripciones.jrxml");
-            JasperPrint imprimir;
-           imprimir = JasperFillManager.fillReport(reporte, null, cc);
-            JasperViewer.viewReport(imprimir,false);
-        } catch (JRException ex) {
-            JOptionPane.showMessageDialog(this, ex);
-        } catch (SQLException ex) {
-            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_jmniInscripcionesActionPerformed
+    private void jmniDistribucionGeneroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmniDistribucionGeneroActionPerformed
+        try{
+           CursoNombre a = new CursoNombre("src\\reportesGestion\\course_students_chart.jrxml");
+           addInternalFrameNoOverlap(a);
+       }catch(Exception e){
+           JOptionPane.showMessageDialog(this, "ERROR INTERNO DEL SERVIDOR");
+       }
+    }//GEN-LAST:event_jmniDistribucionGeneroActionPerformed
 
     /**
      * @param args the command line arguments
@@ -379,9 +367,9 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JDesktopPane jdskPrincipal;
-    private javax.swing.JMenuItem jmniCursos;
+    private javax.swing.JMenuItem jmniDistribucionGenero;
     private javax.swing.JMenuItem jmniEstudiantes;
-    private javax.swing.JMenuItem jmniInscripciones;
+    private javax.swing.JMenuItem jmniEstudiantesCurso;
     private javax.swing.JMenu jmnuStudents;
     // End of variables declaration//GEN-END:variables
 }

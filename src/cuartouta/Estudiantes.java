@@ -5,6 +5,7 @@
 package cuartouta;
 
 //import com.sun.jdi.connect.spi.Connection;
+import java.awt.event.KeyEvent;
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -332,6 +333,8 @@ public class Estudiantes extends javax.swing.JInternalFrame {
         jtxtApellido = new javax.swing.JTextField();
         jtxtDireccion = new javax.swing.JTextField();
         jtxtTelefono = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
+        jtxtGenero = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
         jbtnNuevo = new javax.swing.JButton();
         jbtnGuardar = new javax.swing.JButton();
@@ -364,6 +367,19 @@ public class Estudiantes extends javax.swing.JInternalFrame {
             }
         });
 
+        jLabel7.setText("Genero");
+
+        jtxtGenero.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jtxtGeneroActionPerformed(evt);
+            }
+        });
+        jtxtGenero.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jtxtGeneroKeyTyped(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -386,8 +402,11 @@ public class Estudiantes extends javax.swing.JInternalFrame {
                             .addComponent(jtxtCedula)
                             .addComponent(jtxtNombre)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGap(89, 89, 89)
-                        .addComponent(jtxtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(24, 24, 24)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jtxtTelefono, javax.swing.GroupLayout.DEFAULT_SIZE, 112, Short.MAX_VALUE)
+                            .addComponent(jtxtGenero))))
                 .addContainerGap(214, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -413,6 +432,10 @@ public class Estudiantes extends javax.swing.JInternalFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel5)
                     .addComponent(jtxtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
+                    .addComponent(jtxtGenero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -480,7 +503,7 @@ public class Estudiantes extends javax.swing.JInternalFrame {
                 .addComponent(JbtnEliminar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jbtnCancelar)
-                .addContainerGap(55, Short.MAX_VALUE))
+                .addContainerGap(61, Short.MAX_VALUE))
         );
 
         jPanel3.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
@@ -521,7 +544,7 @@ public class Estudiantes extends javax.swing.JInternalFrame {
                     .addComponent(jtxtBuscarEstudiante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(24, 24, 24)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addContainerGap(9, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -577,6 +600,32 @@ public class Estudiantes extends javax.swing.JInternalFrame {
         btnCancelar();
     }//GEN-LAST:event_jbtnCancelarActionPerformed
 
+    private void jtxtGeneroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtxtGeneroActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jtxtGeneroActionPerformed
+
+    private void jtxtGeneroKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtxtGeneroKeyTyped
+        String texto = jtxtGenero.getText().trim().toLowerCase();
+
+    if (texto.startsWith("h")) {
+        if (!"hombre".startsWith(texto)) {
+            jtxtGenero.setText("hombre".substring(0, texto.length() - 1));
+        }
+    } else if (texto.startsWith("m")) {
+        if (!"mujer".startsWith(texto)) {
+            jtxtGenero.setText("mujer".substring(0, texto.length() - 1));
+        }
+    } else if (!texto.isEmpty()) {
+        jtxtGenero.setText("");
+    }
+
+    // Si el texto completo es incorrecto
+    if (!texto.equals("hombre") && !texto.equals("mujer") && texto.length() >= 5) {
+        JOptionPane.showMessageDialog(null, "Solo se permite 'Hombre' o 'Mujer'.");
+        jtxtGenero.setText("");
+    }
+    }//GEN-LAST:event_jtxtGeneroKeyTyped
+
     /**
      * @param args the command line arguments
      */
@@ -589,6 +638,7 @@ public class Estudiantes extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -602,6 +652,7 @@ public class Estudiantes extends javax.swing.JInternalFrame {
     private javax.swing.JTextField jtxtBuscarEstudiante;
     private javax.swing.JTextField jtxtCedula;
     private javax.swing.JTextField jtxtDireccion;
+    private javax.swing.JTextField jtxtGenero;
     private javax.swing.JTextField jtxtNombre;
     private javax.swing.JTextField jtxtTelefono;
     // End of variables declaration//GEN-END:variables
