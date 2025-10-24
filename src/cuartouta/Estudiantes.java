@@ -10,6 +10,7 @@ import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.management.modelmbean.ModelMBean;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -39,6 +40,7 @@ public class Estudiantes extends javax.swing.JInternalFrame {
         table.addColumn("APELLIDO");
         table.addColumn("DIRECCION");
         table.addColumn("TELEFONO");
+        table.addColumn("GENERO");
         getData("");
         //this.setLocationRelativeTo(null);
         cargardatos();
@@ -135,9 +137,12 @@ public class Estudiantes extends javax.swing.JInternalFrame {
             } else if (jtxtApellido.getText().trim().isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Es obligatorio el apellido");
                 jtxtApellido.requestFocus();
+            } else if(jtxtGenero.getText().trim().isEmpty()){
+                JOptionPane.showMessageDialog(this, "Es obligatorio el genero");
+                jtxtGenero.requestFocus();
             } else {
                 Connection cc = con.conectar();
-                String sql = "INSERT INTO estudiante VALUES (?, ?, ?, ?, ?)";
+                String sql = "INSERT INTO estudiante VALUES (?, ?, ?, ?, ?,?)";
                 PreparedStatement psd = cc.prepareStatement(sql);
                 psd.setString(1, jtxtCedula.getText());
                 psd.setString(2, jtxtNombre.getText());
@@ -146,6 +151,7 @@ public class Estudiantes extends javax.swing.JInternalFrame {
                 // Uso de operador ternario para dirección y teléfono
                 psd.setString(4, jtxtDireccion.getText().trim().isEmpty() ? "S/D" : jtxtDireccion.getText());
                 psd.setString(5, jtxtTelefono.getText().trim().isEmpty() ? "00000" : jtxtTelefono.getText());
+                psd.setString(6, jtxtGenero.getText());
 
                 int n = psd.executeUpdate();
                 if (n > 0) {
@@ -168,6 +174,7 @@ public class Estudiantes extends javax.swing.JInternalFrame {
         jtxtApellido.setEnabled(false);
         jtxtTelefono.setEnabled(false);
         jtxtDireccion.setEnabled(false);
+        jtxtGenero.setEnabled(false);
 
         jbtnNuevo.setEnabled(true);
         jbtnEditar.setEnabled(false);
@@ -183,12 +190,13 @@ public class Estudiantes extends javax.swing.JInternalFrame {
         jtxtApellido.setText("");
         jtxtDireccion.setText("");
         jtxtTelefono.setText("");
+        jtxtGenero.setText("");
     }
 
     public void getData(String filter) {
         try {
             table.setRowCount(0);
-            String data[] = new String[5];
+            String data[] = new String[6];
             Connection cc = con.conectar();
             String sql = "select * from estudiante";
             java.sql.PreparedStatement psd;
@@ -207,6 +215,7 @@ public class Estudiantes extends javax.swing.JInternalFrame {
                 data[2] = rs.getString("est_apellido");
                 data[3] = rs.getString("est_direccion");
                 data[4] = rs.getString("est_telefono");
+                data[5] = rs.getString("est_genero");
                 table.addRow(data);
 
             }
@@ -227,6 +236,7 @@ public class Estudiantes extends javax.swing.JInternalFrame {
                 if (n > 0) {
                     JOptionPane.showMessageDialog(this, "SE ELIMINO CORRECTAMENTE");
                     getData("");
+                    btnCancelar();
                 }
             }
         } catch (Exception ex) {
@@ -241,7 +251,8 @@ public class Estudiantes extends javax.swing.JInternalFrame {
                     + "est_nombre = '" + jtxtNombre.getText() + "', "
                     + "est_apellido = '" + jtxtApellido.getText() + "', "
                     + "est_direccion = '" + jtxtDireccion.getText() + "', "
-                    + "est_telefono = '" + jtxtTelefono.getText() + "' "
+                    + "est_telefono = '" + jtxtTelefono.getText() + "', "
+                    +"est_genero = '" + jtxtGenero.getText()+"'"
                     + "WHERE est_cedula = '" + jtxtCedula.getText() + "'";
 
             PreparedStatement psd = cc.prepareStatement(sql);
@@ -251,6 +262,7 @@ public class Estudiantes extends javax.swing.JInternalFrame {
                 JOptionPane.showMessageDialog(this, "SE ACTUALIZÓ CORRECTAMENTE");
                 getData("");  // Refresca la tabla
                 clean();    // Limpia los campos
+                btnCancelar();
             }
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
@@ -270,6 +282,8 @@ public class Estudiantes extends javax.swing.JInternalFrame {
                     jtxtApellido.setText(jtblDatos.getValueAt(row, 2).toString());
                     jtxtDireccion.setText(jtblDatos.getValueAt(row, 3).toString());
                     jtxtTelefono.setText(jtblDatos.getValueAt(row, 4).toString());
+                    jtxtGenero.setText(jtblDatos.getValueAt(row, 5).toString());
+                    
                 }
             }
         });
@@ -299,6 +313,7 @@ public class Estudiantes extends javax.swing.JInternalFrame {
         jtxtApellido.setEnabled(false);
         jtxtDireccion.setEnabled(false);
         jtxtTelefono.setEnabled(false);
+        jtxtGenero.setEnabled(false);
         clean();
     }
 
@@ -316,6 +331,7 @@ public class Estudiantes extends javax.swing.JInternalFrame {
         jtxtApellido.setEnabled(true);
         jtxtDireccion.setEnabled(true);
         jtxtTelefono.setEnabled(true);
+        jtxtGenero.setEnabled(true);
     }
 
     @SuppressWarnings("unchecked")
@@ -600,31 +616,31 @@ public class Estudiantes extends javax.swing.JInternalFrame {
         btnCancelar();
     }//GEN-LAST:event_jbtnCancelarActionPerformed
 
-    private void jtxtGeneroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtxtGeneroActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jtxtGeneroActionPerformed
-
     private void jtxtGeneroKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtxtGeneroKeyTyped
         String texto = jtxtGenero.getText().trim().toLowerCase();
 
-    if (texto.startsWith("h")) {
-        if (!"hombre".startsWith(texto)) {
-            jtxtGenero.setText("hombre".substring(0, texto.length() - 1));
+        if (texto.startsWith("h")) {
+            if (!"hombre".startsWith(texto)) {
+                jtxtGenero.setText("hombre".substring(0, texto.length() - 1));
+            }
+        } else if (texto.startsWith("m")) {
+            if (!"mujer".startsWith(texto)) {
+                jtxtGenero.setText("mujer".substring(0, texto.length() - 1));
+            }
+        } else if (!texto.isEmpty()) {
+            jtxtGenero.setText("");
         }
-    } else if (texto.startsWith("m")) {
-        if (!"mujer".startsWith(texto)) {
-            jtxtGenero.setText("mujer".substring(0, texto.length() - 1));
-        }
-    } else if (!texto.isEmpty()) {
-        jtxtGenero.setText("");
-    }
 
-    // Si el texto completo es incorrecto
-    if (!texto.equals("hombre") && !texto.equals("mujer") && texto.length() >= 5) {
-        JOptionPane.showMessageDialog(null, "Solo se permite 'Hombre' o 'Mujer'.");
-        jtxtGenero.setText("");
-    }
+        // Si el texto completo es incorrecto
+        if (!texto.equals("hombre") && !texto.equals("mujer") && texto.length() >= 5) {
+            JOptionPane.showMessageDialog(null, "Solo se permite 'Hombre' o 'Mujer'.");
+            jtxtGenero.setText("");
+        }
     }//GEN-LAST:event_jtxtGeneroKeyTyped
+
+    private void jtxtGeneroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtxtGeneroActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jtxtGeneroActionPerformed
 
     /**
      * @param args the command line arguments
