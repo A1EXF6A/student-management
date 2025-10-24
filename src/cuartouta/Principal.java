@@ -320,7 +320,7 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     private void jmniEstudiantesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmniEstudiantesActionPerformed
-       try {
+       /*try {
                  Conexion con = new Conexion();
             Connection cc = (Connection) con.conectar();
             JasperReport reporte = JasperCompileManager.compileReport("src\\reportes\\estudiantes.jrxml");
@@ -331,7 +331,8 @@ public class Principal extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, ex);
         } catch (SQLException ex) {
             Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        }*/
+       
     }//GEN-LAST:event_jmniEstudiantesActionPerformed
 
     private void jmniCursosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmniCursosActionPerformed

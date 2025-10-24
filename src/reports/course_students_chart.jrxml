@@ -23,13 +23,13 @@ GROUP BY est_genero]]>
 	</background>
 	<title>
 		<band height="79" splitType="Stretch">
-			<staticText>
-				<reportElement x="0" y="20" width="555" height="30" uuid="abcdef12-3456-7890-abcd-ef1234567891"/>
-				<textElement textAlignment="Center">
+			<textField>
+				<reportElement x="0" y="20" width="555" height="30" uuid="fd0eced1-c263-443b-a2c7-4ebda0899ec3"/>
+				<textElement textAlignment="Center" markup="none">
 					<font size="20" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Gráfico de Estudiantes por Género en el Curso: $P{course_name}]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA["Gráfico de Estudiantes por Género en el Curso: " +$P{course_name}.toUpperCase()]]></textFieldExpression>
+			</textField>
 		</band>
 	</title>
 	<pageFooter>
@@ -69,7 +69,13 @@ GROUP BY est_genero]]>
 					<plot/>
 					<itemLabel/>
 					<categoryAxisLabelExpression><![CDATA["Género"]]></categoryAxisLabelExpression>
+					<categoryAxisFormat>
+						<axisFormat/>
+					</categoryAxisFormat>
 					<valueAxisLabelExpression><![CDATA["Número de Estudiantes"]]></valueAxisLabelExpression>
+					<valueAxisFormat>
+						<axisFormat/>
+					</valueAxisFormat>
 				</barPlot>
 			</barChart>
 		</band>
